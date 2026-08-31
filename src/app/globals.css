@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+:root {
+  --canvas: #fafafa;
+  --panel: #f4f4f2;
+  --ink: #090909;
+  --muted: #666666;
+  --line: #e5e5e5;
+  --strong: #cacaca;
+  --accent: #2455ff;
+  --accent-hover: #1845dc;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-strong: var(--strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --text-hero: clamp(3.2rem, 6.4vw, 5.2rem);
+  --text-section: clamp(2.4rem, 4.5vw, 3.75rem);
+  --container-site: 90rem;
+  --spacing-site: 1440px;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  background: var(--canvas);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+a, button, summary { -webkit-tap-highlight-color: transparent; }
+button, summary { cursor: pointer; }
+
+:focus-visible { outline-color: var(--accent); }
+
+::selection {
+  background: var(--accent);
+  color: white;
+}
+
+.eyebrow {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.technical-grid {
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.graph-node { animation: node-pulse 2.8s ease-in-out infinite; }
+
+.route-transition {
+  animation: route-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  background: var(--ink);
+  color: white;
+  padding: 0.75rem 1rem;
+}
+
+.skip-link:focus { transform: translateY(0); }
+
+@keyframes node-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.75); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes route-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
