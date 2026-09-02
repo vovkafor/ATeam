@@ -43,7 +43,12 @@ export async function submitBooking(_previous: BookingState, form: FormData): Pr
     console.error("[booking] MEET_ROOM_URL is not set or is not a valid https URL.");
     return {
       status: "error",
-      message: "Booking is temporarily unavailable. Please email us directly and we'll confirm the slot.",
+      // Visitors get the polite version; whoever is running the app locally
+      // gets the actual cause, because a generic message here is a dead end.
+      message:
+        process.env.NODE_ENV === "production"
+          ? "Booking is temporarily unavailable. Please email us directly and we'll confirm the slot."
+          : "Setup needed: MEET_ROOM_URL is missing from .env.local (or is not an https URL). Add your standing Google Meet or Zoom room and restart the dev server.",
     };
   }
 
