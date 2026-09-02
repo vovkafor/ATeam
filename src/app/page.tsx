@@ -142,8 +142,8 @@ export default function Home() {
 
       <Container>
         <Section>
-          <SectionHeader eyebrow="TEAM / 04" title="Small team. Engineering first." description="Placeholder profiles keep the team structure ready for real biographies and photography." />
-          <div className="grid border-t border-line sm:grid-cols-2 lg:grid-cols-4">
+          <SectionHeader eyebrow="TEAM / 02" title="Small team. Engineering first." description="Two senior QA engineers doing the work directly — no account layer, no handover to juniors." />
+          <div className="grid border-t border-line lg:grid-cols-2">
             {team.map((member, index) => <TeamCard key={member.name} member={member} index={index} />)}
           </div>
         </Section>

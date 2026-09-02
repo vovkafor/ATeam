@@ -23,8 +23,8 @@ export default function AboutPage() {
           <div className="p-5 text-lg leading-8 text-muted md:p-10"><p>A useful QA system makes risk visible at the right moment. It does not chase test counts. It gives developers fast evidence, gives release owners a defensible signal, and stays maintainable as the product changes.</p></div>
         </section>
         <section className="border-b border-line">
-          <SectionHeader eyebrow="TEAM / 04" title="Four focused engineering roles." description="The profiles below are centralized placeholders ready to be replaced with the real team and photography." />
-          <div className="grid border-t border-line sm:grid-cols-2 lg:grid-cols-4">{team.map((member) => <TeamCard key={member.name} member={member} />)}</div>
+          <SectionHeader eyebrow="TEAM / 02" title="The engineers on the work." description="Two senior QA engineers with complementary ground: mobile and web automation at scale, and evaluation of AI-driven systems." />
+          <div className="grid border-t border-line lg:grid-cols-2">{team.map((member, index) => <TeamCard key={member.name} member={member} index={index} />)}</div>
         </section>
         <section className="grid border-b border-line lg:grid-cols-2">
           <div className="border-b border-line p-5 md:p-10 lg:border-b-0 lg:border-r"><p className="eyebrow">EXPERTISE / 12</p><h2 className="mt-7 text-section font-medium tracking-[-0.05em]">Tools follow the system design.</h2></div>

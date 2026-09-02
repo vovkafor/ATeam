@@ -94,7 +94,7 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <nav id="mobile-navigation" aria-label="Mobile navigation" className="border-t border-line bg-canvas md:hidden" data-scroll-native>
+        <nav id="mobile-navigation" aria-label="Mobile navigation" className="border-t border-line bg-canvas md:hidden">
           <ul>
             {navigation.map((item) => (
               <li key={item.href} className="border-b border-line">

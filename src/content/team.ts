@@ -1,8 +1,23 @@
 import type { TeamMember } from "@/types/content";
 
 export const team: TeamMember[] = [
-  { name: "Alex Morgan", initials: "AM", role: "QA Architect", description: "Designs risk-based automation systems and release quality models.", technologies: ["Playwright", "TypeScript", "CI/CD", "Architecture"] },
-  { name: "Maya Chen", initials: "MC", role: "Automation Engineer", description: "Builds maintainable browser and API test infrastructure.", technologies: ["Cypress", "REST", "Python", "Docker"] },
-  { name: "Noah Williams", initials: "NW", role: "Performance Engineer", description: "Turns production traffic patterns into repeatable capacity evidence.", technologies: ["k6", "Grafana", "OpenTelemetry", "JMeter"] },
-  { name: "Sofia Patel", initials: "SP", role: "QA Platform Engineer", description: "Connects test execution, diagnostics, and developer workflows.", technologies: ["GitHub Actions", "Playwright", "Allure", "Kubernetes"] },
+  {
+    name: "Myron Satsyk",
+    initials: "MS",
+    role: "Senior QA Engineer",
+    description:
+      "Builds mobile and web automation frameworks from zero — Appium, Cypress and PyTest wired into GitLab CI. Took a text-to-speech app from 0% to ~70% automated coverage and cut regression cycles by over 60%.",
+    technologies: ["Appium", "Cypress", "PyTest", "GitLab CI", "Postman", "SQL"],
+  },
+  {
+    name: "Volodymyr Formanchuk",
+    initials: "VF",
+    role: "QA Engineer — LLM & AI Evaluation",
+    description:
+      "Designs evaluation frameworks for AI-driven products — factual accuracy, hallucination detection and prompt architecture — alongside PyTest and Playwright suites integrated into CI/CD pipelines.",
+    technologies: ["Playwright", "PyTest", "Python", "LLM Evaluation", "GitLab CI", "REST"],
+    image: "/images/volodymyr-formanchuk.jpg",
+    linkedin: "https://www.linkedin.com/in/volodymyr-formanchuk-296994382",
+    github: "https://github.com/vovkafor",
+  },
 ];

@@ -59,10 +59,19 @@ body {
   overflow-x: hidden;
   color: var(--ink);
   font-family: var(--font-geist-sans), sans-serif;
+}
+
+/* The page gradient lives on a fixed, composited layer instead of a
+   background-attachment: fixed body, which repaints on every scroll frame. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background:
     radial-gradient(120rem 46rem at 50% -14rem, rgba(36, 85, 255, 0.055), transparent 62%),
     linear-gradient(180deg, var(--canvas-top) 0%, #fbfbfc 42%, var(--canvas-bottom) 100%);
-  background-attachment: fixed;
 }
 
 a, button, summary { -webkit-tap-highlight-color: transparent; }
@@ -333,60 +342,6 @@ html[data-reveal-ready] [data-reveal].is-revealed {
   animation: node-pulse 2.8s ease-in-out infinite;
 }
 
-/* ---------------------------------------------------------- custom cursor */
-
-.cursor-dot,
-.cursor-ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  pointer-events: none;
-  border-radius: 9999px;
-  opacity: 0;
-  transition: opacity 260ms ease, width 260ms var(--ease-out-expo),
-    height 260ms var(--ease-out-expo), background-color 260ms ease, border-color 260ms ease;
-}
-
-.cursor-dot {
-  width: 7px;
-  height: 7px;
-  margin: -3.5px 0 0 -3.5px;
-  background: var(--accent);
-}
-
-.cursor-ring {
-  width: 30px;
-  height: 30px;
-  margin: -15px 0 0 -15px;
-  border: 1px solid rgba(36, 85, 255, 0.42);
-}
-
-html[data-cursor="on"] .cursor-dot,
-html[data-cursor="on"] .cursor-ring { opacity: 1; }
-
-html[data-cursor="on"][data-cursor-hover="true"] .cursor-dot {
-  width: 4px;
-  height: 4px;
-  margin: -2px 0 0 -2px;
-}
-
-html[data-cursor="on"][data-cursor-hover="true"] .cursor-ring {
-  width: 54px;
-  height: 54px;
-  margin: -27px 0 0 -27px;
-  border-color: var(--accent);
-  background: var(--accent-soft);
-}
-
-@media (pointer: fine) {
-  html[data-cursor="on"],
-  html[data-cursor="on"] a,
-  html[data-cursor="on"] button,
-  html[data-cursor="on"] summary,
-  html[data-cursor="on"] [role="button"] { cursor: none; }
-}
-
 /* ------------------------------------------------------------------ misc */
 
 .route-transition {
@@ -428,5 +383,4 @@ html[data-cursor="on"][data-cursor-hover="true"] .cursor-ring {
   .text-rise > span > span { transform: none; opacity: 1; }
   .fade-up-delayed { opacity: 1; }
   .instrument { transform: none; }
-  .cursor-dot, .cursor-ring { display: none; }
 }

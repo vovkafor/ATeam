@@ -28,7 +28,6 @@ export default function ServicesPage() {
         <nav
           aria-label="Services index"
           className="glass sticky top-18 z-30 border-b border-line"
-          data-scroll-native
         >
           <ol className="flex overflow-x-auto">
             {services.map((service) => (

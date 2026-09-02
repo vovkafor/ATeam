@@ -9,7 +9,7 @@ describe("centralized content", () => {
   it("keeps the brief-defined collection sizes stable", () => {
     expect(services).toHaveLength(5);
     expect(projects).toHaveLength(3);
-    expect(team).toHaveLength(4);
+    expect(team).toHaveLength(2);
     expect(processStages).toHaveLength(6);
     expect(faqItems.length).toBeGreaterThanOrEqual(4);
     expect(faqItems.length).toBeLessThanOrEqual(6);
