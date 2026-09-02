@@ -1,29 +1,40 @@
 "use client";
 
 import Cal from "@calcom/embed-react";
-import { CalendarDays, ChevronLeft, ChevronRight, Clock3, Mail } from "lucide-react";
-import { type FormEvent, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { ChevronLeft, ChevronRight, Clock3, Globe } from "lucide-react";
+import { useActionState, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { submitBooking } from "@/app/book/actions";
+import { BookingForm } from "@/components/booking/booking-form";
+import { BookingSuccess } from "@/components/booking/booking-success";
 import { siteConfig } from "@/config/site";
 import { trackEvent } from "@/lib/analytics";
+import {
+  BUSINESS_TIMEZONE,
+  MEETING_DURATION_MINUTES,
+  TIMEZONE_OPTIONS,
+  TIME_SLOTS,
+} from "@/lib/booking/config";
+import {
+  browserTimeZone,
+  formatSlot,
+  formatTime,
+  toDateKey,
+  zonedTimeToUtc,
+} from "@/lib/booking/timezone";
+import type { BookingState } from "@/lib/booking/types";
 
-type BookingCalendarProps = {
-  provider?: "calcom";
-};
+type BookingCalendarProps = { provider?: "calcom" };
 
 const weekdays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-const timeSlots = ["09:00", "11:30", "14:00", "16:30"];
-
-const monthFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "long",
-  year: "numeric",
-});
-
+const monthFormatter = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   weekday: "long",
   month: "long",
   day: "numeric",
   year: "numeric",
 });
+
+const initialState: BookingState = { status: "idle" };
 
 function getCalLink(bookingUrl: string) {
   try {
@@ -35,12 +46,26 @@ function getCalLink(bookingUrl: string) {
   }
 }
 
-function startOfDay(date: Date) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+/**
+ * Calendar cells are plain year/month/day tuples, not instants — the day a
+ * client picks is a day in the team's timezone, and the slot is resolved to a
+ * real instant only when a time is attached to it.
+ */
+function businessToday() {
+  const [year, month, day] = new Intl.DateTimeFormat("en-CA", {
+    timeZone: BUSINESS_TIMEZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  })
+    .format(new Date())
+    .split("-")
+    .map(Number);
+  return new Date(year, month - 1, day);
 }
 
 function dateKey(date: Date) {
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  return toDateKey(date);
 }
 
 function isWeekday(date: Date) {
@@ -48,7 +73,7 @@ function isWeekday(date: Date) {
 }
 
 function nextAvailableDate(from: Date) {
-  const date = startOfDay(from);
+  const date = new Date(from);
   date.setDate(date.getDate() + 1);
   while (!isWeekday(date)) date.setDate(date.getDate() + 1);
   return date;
@@ -56,7 +81,7 @@ function nextAvailableDate(from: Date) {
 
 function firstAvailableDateInMonth(month: Date, today: Date) {
   const first = new Date(month.getFullYear(), month.getMonth(), 1);
-  const date = first < today ? startOfDay(today) : first;
+  const date = first < today ? new Date(today) : first;
   while (!isWeekday(date)) date.setDate(date.getDate() + 1);
   return date;
 }
@@ -68,37 +93,88 @@ function getCalendarDays(month: Date) {
 
   return Array.from({ length: 42 }, (_, index) => {
     const day = index - offset + 1;
-    return day > 0 && day <= daysInMonth
-      ? new Date(month.getFullYear(), month.getMonth(), day)
-      : null;
+    return day > 0 && day <= daysInMonth ? new Date(month.getFullYear(), month.getMonth(), day) : null;
   });
 }
 
-function subscribeToTimezone() {
+/** `useSyncExternalStore` reads the browser zone without a render-phase call. */
+function subscribeToNothing() {
   return () => undefined;
 }
 
-function getBrowserTimezone() {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone || "Local time";
+/** Absolute instant for a business-local date + slot. */
+function slotInstant(date: Date, slot: string) {
+  const [hours, minutes] = slot.split(":").map(Number);
+  return zonedTimeToUtc(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes, BUSINESS_TIMEZONE);
 }
 
 function BookingPlanner() {
-  const [today] = useState(() => startOfDay(new Date()));
-  const [selectedDate, setSelectedDate] = useState(() => nextAvailableDate(new Date()));
+  const [today] = useState(businessToday);
+  // Read once at mount: a render-phase clock would make the output unstable.
+  const [mountedAt] = useState(() => Date.now());
+  const [selectedDate, setSelectedDate] = useState(() => nextAvailableDate(businessToday()));
   const [visibleMonth, setVisibleMonth] = useState(
     () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
   );
-  const [selectedTime, setSelectedTime] = useState(timeSlots[0]);
-  const [requestStarted, setRequestStarted] = useState(false);
-  const timezone = useSyncExternalStore(subscribeToTimezone, getBrowserTimezone, () => "Local time");
+  const [selectedTime, setSelectedTime] = useState<string>(TIME_SLOTS[0]);
+  const [chosenTimeZone, setChosenTimeZone] = useState<string | null>(null);
+  const [formKey, setFormKey] = useState(0);
+  const [dismissedReference, setDismissedReference] = useState<string | null>(null);
+
+  const [state, formAction, pending] = useActionState(submitBooking, initialState);
+
+  // The server has no browser zone, so it renders business time and the client
+  // swaps to the detected zone on hydration. An explicit pick always wins.
+  const detectedTimeZone = useSyncExternalStore(
+    subscribeToNothing,
+    browserTimeZone,
+    () => BUSINESS_TIMEZONE,
+  );
+  const timeZone = chosenTimeZone ?? detectedTimeZone;
+
+  useEffect(() => {
+    trackEvent("booking_calendar_loaded", { provider: "email" });
+  }, []);
 
   const calendarDays = useMemo(() => getCalendarDays(visibleMonth), [visibleMonth]);
   const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const canGoBack = visibleMonth > currentMonth;
 
-  useEffect(() => {
-    trackEvent("booking_calendar_loaded", { provider: "email" });
-  }, []);
+  const timezoneChoices = useMemo(
+    () => Array.from(new Set([timeZone, ...TIMEZONE_OPTIONS])),
+    [timeZone],
+  );
+
+  /** Slots for the selected day, converted into the viewer's zone. */
+  const slots = useMemo(() => {
+    return TIME_SLOTS.map((slot) => {
+      const start = slotInstant(selectedDate, slot);
+      const viewerDay = toDateKey(start, timeZone);
+      const businessDay = toDateKey(start, BUSINESS_TIMEZONE);
+      const dayShift =
+        viewerDay === businessDay ? 0 : new Date(viewerDay).getTime() > new Date(businessDay).getTime() ? 1 : -1;
+
+      return {
+        slot,
+        start,
+        label: formatTime(start, timeZone),
+        dayShift,
+        past: start.getTime() <= mountedAt,
+      };
+    });
+  }, [mountedAt, selectedDate, timeZone]);
+
+  const activeSlot = slots.find((entry) => entry.slot === selectedTime) ?? slots.find((entry) => !entry.past);
+  const slotSummary = activeSlot
+    ? formatSlot(
+        activeSlot.start,
+        new Date(activeSlot.start.getTime() + MEETING_DURATION_MINUTES * 60_000),
+        timeZone,
+      )
+    : dateFormatter.format(selectedDate);
+
+  const showSuccess =
+    state.status === "success" && dismissedReference !== state.confirmation.reference;
 
   function changeMonth(direction: -1 | 1) {
     const nextMonth = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + direction, 1);
@@ -106,34 +182,31 @@ function BookingPlanner() {
 
     setVisibleMonth(nextMonth);
     setSelectedDate(firstAvailableDateInMonth(nextMonth, today));
-    setSelectedTime(timeSlots[0]);
+    setSelectedTime(TIME_SLOTS[0]);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const name = String(form.get("name") || "").trim();
-    const email = String(form.get("email") || "").trim();
-    const challenge = String(form.get("challenge") || "").trim();
-
-    const subject = `QA consultation request — ${dateFormatter.format(selectedDate)}`;
-    const body = [
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Requested slot: ${dateFormatter.format(selectedDate)} at ${selectedTime}`,
-      `Timezone: ${timezone}`,
-      "",
-      "QA challenge:",
-      challenge,
-    ].join("\n");
-
+  function handleAction(payload: FormData) {
     trackEvent("booking_started", {
       date: dateKey(selectedDate),
       time: selectedTime,
-      provider: "email",
+      timezone: timeZone,
+      attachment: payload.get("attachment") instanceof File && (payload.get("attachment") as File).size > 0,
     });
-    setRequestStarted(true);
-    window.location.href = `mailto:${siteConfig.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    formAction(payload);
+  }
+
+  if (showSuccess && state.status === "success") {
+    return (
+      <div className="overflow-hidden border border-line bg-white" data-testid="booking-planner">
+        <BookingSuccess
+          confirmation={state.confirmation}
+          onReset={() => {
+            setDismissedReference(state.confirmation.reference);
+            setFormKey((key) => key + 1);
+          }}
+        />
+      </div>
+    );
   }
 
   return (
@@ -144,7 +217,7 @@ function BookingPlanner() {
           <h2 className="mt-2 text-2xl font-medium tracking-[-0.035em]">Reserve your QA consultation</h2>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted">
-          <Clock3 aria-hidden="true" size={16} /> 30 minutes
+          <Clock3 aria-hidden="true" size={16} /> {MEETING_DURATION_MINUTES} minutes
         </div>
       </div>
 
@@ -161,7 +234,7 @@ function BookingPlanner() {
                 aria-label="Previous month"
                 disabled={!canGoBack}
                 onClick={() => changeMonth(-1)}
-                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors hover:border-ink hover:bg-ink hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:bg-transparent disabled:hover:text-ink"
+                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:bg-transparent disabled:hover:text-ink"
               >
                 <ChevronLeft aria-hidden="true" size={17} />
               </button>
@@ -169,7 +242,7 @@ function BookingPlanner() {
                 type="button"
                 aria-label="Next month"
                 onClick={() => changeMonth(1)}
-                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors hover:border-ink hover:bg-ink hover:text-white"
+                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white"
               >
                 <ChevronRight aria-hidden="true" size={17} />
               </button>
@@ -192,9 +265,9 @@ function BookingPlanner() {
                   role="gridcell"
                   aria-label={dateFormatter.format(date)}
                   aria-selected={selected}
-                  disabled={!available}
+                  disabled={!available || pending}
                   onClick={() => setSelectedDate(date)}
-                  className={`aspect-square min-h-10 border text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${selected ? "border-accent bg-accent font-medium text-white" : "border-transparent hover:border-ink hover:bg-panel"} disabled:cursor-not-allowed disabled:text-strong disabled:hover:border-transparent disabled:hover:bg-transparent`}
+                  className={`aspect-square min-h-10 border text-sm transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${selected ? "border-accent bg-accent font-medium text-white" : "border-transparent hover:border-ink hover:bg-panel"} disabled:cursor-not-allowed disabled:text-strong disabled:hover:border-transparent disabled:hover:bg-transparent`}
                 >
                   {date.getDate()}
                 </button>
@@ -205,46 +278,62 @@ function BookingPlanner() {
           <div className="mt-8 border-t border-line pt-6">
             <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted">Available slots</p>
             <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-4">
-              {timeSlots.map((time) => (
+              {slots.map((entry) => (
                 <button
-                  key={time}
+                  key={entry.slot}
                   type="button"
-                  aria-pressed={selectedTime === time}
-                  onClick={() => setSelectedTime(time)}
-                  className={`min-h-11 border px-3 font-mono text-[11px] transition-colors ${selectedTime === time ? "border-ink bg-ink text-white" : "border-line bg-white text-muted hover:border-ink hover:text-ink"}`}
+                  aria-pressed={selectedTime === entry.slot}
+                  disabled={entry.past || pending}
+                  onClick={() => setSelectedTime(entry.slot)}
+                  className={`min-h-11 border px-3 font-mono text-[11px] transition-colors duration-300 ${selectedTime === entry.slot ? "border-ink bg-ink text-white" : "border-line bg-white text-muted hover:border-ink hover:text-ink"} disabled:cursor-not-allowed disabled:border-line disabled:bg-panel/60 disabled:text-strong disabled:hover:text-strong`}
                 >
-                  {time}
+                  {entry.label}
+                  {entry.dayShift !== 0 ? (
+                    <span className="ml-1 text-[9px] opacity-70">{entry.dayShift > 0 ? "+1d" : "−1d"}</span>
+                  ) : null}
                 </button>
               ))}
             </div>
-            <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.08em] text-muted">Timezone / {timezone}</p>
+
+            <div className="mt-6 border-t border-line pt-5">
+              <label
+                className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.1em] text-muted"
+                htmlFor="booking-timezone"
+              >
+                <Globe aria-hidden="true" size={13} /> Times shown in
+              </label>
+              <select
+                id="booking-timezone"
+                value={timeZone}
+                disabled={pending}
+                onChange={(event) => setChosenTimeZone(event.target.value)}
+                className="mt-2 min-h-11 w-full border border-line bg-white px-3 text-sm outline-none transition-[border-color,box-shadow] duration-300 focus:border-accent focus:ring-2 focus:ring-accent/15 disabled:cursor-not-allowed disabled:bg-panel/60"
+              >
+                {timezoneChoices.map((zone) => (
+                  <option key={zone} value={zone}>
+                    {zone.replace("_", " ")}
+                  </option>
+                ))}
+              </select>
+              {timeZone !== BUSINESS_TIMEZONE && activeSlot ? (
+                <p className="mt-3 font-mono text-[9px] uppercase leading-4 tracking-[0.08em] text-muted">
+                  {formatTime(activeSlot.start, BUSINESS_TIMEZONE)} our time / {BUSINESS_TIMEZONE.replace("_", " ")}
+                </p>
+              ) : null}
+            </div>
           </div>
         </section>
 
-        <form className="bg-canvas p-5 md:p-7" onSubmit={handleSubmit}>
-          <div className="flex items-start gap-3 border-b border-line pb-5">
-            <CalendarDays aria-hidden="true" className="mt-0.5 text-accent" size={19} strokeWidth={1.5} />
-            <div>
-              <p className="font-medium">{dateFormatter.format(selectedDate)}</p>
-              <p className="mt-1 text-sm text-muted">{selectedTime} · {timezone}</p>
-            </div>
-          </div>
-
-          <label className="mt-6 block font-mono text-[10px] uppercase tracking-[0.1em] text-muted" htmlFor="booking-name">Name</label>
-          <input id="booking-name" name="name" required autoComplete="name" placeholder="Your name" className="mt-2 min-h-12 w-full border border-line bg-white px-4 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/15" />
-
-          <label className="mt-5 block font-mono text-[10px] uppercase tracking-[0.1em] text-muted" htmlFor="booking-email">Email</label>
-          <input id="booking-email" name="email" type="email" required autoComplete="email" placeholder="you@company.com" className="mt-2 min-h-12 w-full border border-line bg-white px-4 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/15" />
-
-          <label className="mt-5 block font-mono text-[10px] uppercase tracking-[0.1em] text-muted" htmlFor="booking-challenge">What should we help you automate?</label>
-          <textarea id="booking-challenge" name="challenge" required rows={4} placeholder="Regression QA, API coverage, release confidence…" className="mt-2 w-full resize-y border border-line bg-white p-4 text-sm leading-6 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/15" />
-
-          <button type="submit" className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 border border-accent bg-accent px-5 font-medium text-white transition-colors hover:border-accent-hover hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent">
-            <Mail aria-hidden="true" size={16} /> Confirm booking
-          </button>
-          <p className="mt-3 text-center text-xs leading-5 text-muted">Opens a pre-filled email so the team can confirm the selected slot.</p>
-          {requestStarted ? <p className="mt-3 text-center text-sm font-medium text-accent" role="status">Your booking request is ready in your email app.</p> : null}
-        </form>
+        <BookingForm
+          key={formKey}
+          action={handleAction}
+          state={state}
+          pending={pending}
+          dateValue={dateKey(selectedDate)}
+          timeValue={selectedTime}
+          timeZone={timeZone}
+          slotSummary={slotSummary}
+        />
       </div>
     </div>
   );

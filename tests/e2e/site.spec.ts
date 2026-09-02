@@ -13,7 +13,7 @@ test("homepage loads and primary CTAs navigate", async ({ page }) => {
 
 test("desktop navigation reaches every main route", async ({ page, isMobile }) => {
   test.skip(Boolean(isMobile), "Desktop navigation is replaced by the mobile menu.");
-  const routes = [["Services", "/services"], ["Work", "/work"], ["Process", "/process"], ["About", "/about"]] as const;
+  const routes = [["Services", "/services"], ["Work", "/work"], ["Process", "/process"], ["Team", "/team"], ["About", "/about"]] as const;
   for (const [label, route] of routes) {
     await page.goto("/");
     await page.getByRole("navigation", { name: "Primary navigation" }).getByRole("link", { name: label }).click();
@@ -29,10 +29,12 @@ test("work list opens a generated case study", async ({ page }) => {
   await expect(page.getByText("Regression suite")).toBeVisible();
 });
 
-test("booking page renders a graceful unconfigured state", async ({ page }) => {
+test("booking page renders the planner with an attachment field", async ({ page }) => {
   await page.goto("/book");
-  await expect(page.getByTestId("booking-fallback")).toBeVisible();
-  await expect(page.getByRole("link", { name: /email/i })).toHaveAttribute("href", /^mailto:/);
+  await expect(page.getByTestId("booking-planner")).toBeVisible();
+  await expect(page.getByRole("heading", { name: /reserve your qa consultation/i })).toBeVisible();
+  await expect(page.getByLabel(/times shown in/i)).toBeVisible();
+  await expect(page.locator("#booking-attachment")).toHaveAttribute("accept", /application\/pdf/);
 });
 
 test("mobile menu is keyboard and touch accessible", async ({ page }) => {

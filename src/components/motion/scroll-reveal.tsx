@@ -13,6 +13,10 @@ import { useEffect } from "react";
  *
  * The hidden state lives behind `html[data-reveal-ready]`, which is only set
  * once this component mounts, so the page stays fully visible without JS.
+ *
+ * The revealed flag is an attribute rather than a class on purpose: React
+ * rewrites `className` wholesale when a client component re-renders, which
+ * would silently un-reveal any interactive element mid-animation.
  */
 export function ScrollReveal() {
   useEffect(() => {
@@ -20,7 +24,7 @@ export function ScrollReveal() {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduced) {
-      document.querySelectorAll("[data-reveal]").forEach((node) => node.classList.add("is-revealed"));
+      document.querySelectorAll("[data-reveal]").forEach((node) => node.setAttribute("data-revealed", ""));
       return;
     }
 
@@ -30,7 +34,7 @@ export function ScrollReveal() {
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
-          entry.target.classList.add("is-revealed");
+          entry.target.setAttribute("data-revealed", "");
           observer.unobserve(entry.target);
         }
       },
@@ -38,7 +42,7 @@ export function ScrollReveal() {
     );
 
     const observeAll = () => {
-      document.querySelectorAll("[data-reveal]:not(.is-revealed)").forEach((node) => observer.observe(node));
+      document.querySelectorAll("[data-reveal]:not([data-revealed])").forEach((node) => observer.observe(node));
     };
 
     observeAll();

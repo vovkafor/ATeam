@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { TeamCard } from "@/components/cards/team-card";
+import { ButtonLink } from "@/components/ui/button-link";
+import { TrustSignals } from "@/components/sections/trust-signals";
 import { CTASection } from "@/components/sections/cta-section";
 import { Container, PageHero, SectionHeader, TechBadge } from "@/components/ui/primitives";
 import { team } from "@/content/team";
@@ -22,9 +23,17 @@ export default function AboutPage() {
           <div className="border-b border-line p-5 md:p-10 lg:border-b-0 lg:border-r"><p className="eyebrow">PHILOSOPHY / 01</p><h2 className="mt-7 text-section font-medium tracking-[-0.05em]">Release confidence is an engineering problem.</h2></div>
           <div className="p-5 text-lg leading-8 text-muted md:p-10"><p>A useful QA system makes risk visible at the right moment. It does not chase test counts. It gives developers fast evidence, gives release owners a defensible signal, and stays maintainable as the product changes.</p></div>
         </section>
+        <TrustSignals />
         <section className="border-b border-line">
           <SectionHeader eyebrow="TEAM / 02" title="The engineers on the work." description="Two senior QA engineers with complementary ground: mobile and web automation at scale, and evaluation of AI-driven systems." />
-          <div className="grid border-t border-line lg:grid-cols-2">{team.map((member, index) => <TeamCard key={member.name} member={member} index={index} />)}</div>
+          <div className="border-t border-line p-5 md:p-10">
+            <p className="max-w-2xl leading-7 text-muted">
+              {team.map((member) => member.name).join(" and ")} — full profiles, measured outcomes and background are on the team page.
+            </p>
+            <ButtonLink href="/team" variant="secondary" className="mt-7">
+              Meet the team
+            </ButtonLink>
+          </div>
         </section>
         <section className="grid border-b border-line lg:grid-cols-2">
           <div className="border-b border-line p-5 md:p-10 lg:border-b-0 lg:border-r"><p className="eyebrow">EXPERTISE / 12</p><h2 className="mt-7 text-section font-medium tracking-[-0.05em]">Tools follow the system design.</h2></div>
