@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildIcs } from "@/lib/booking/ics";
 import { formatTime, zonedTimeToUtc } from "@/lib/booking/timezone";
+import { bareAddress, buildMimeMessage } from "@/lib/booking/smtp";
 import { validateBooking } from "@/lib/booking/validate";
 
 function form(fields: Record<string, string>, file?: File) {
@@ -125,5 +126,42 @@ describe("calendar invite", () => {
     expect(ics).toContain("mailto:dana@example.com");
     expect(ics).toContain("DESCRIPTION:Line one\\nLine two\\; with\\, separators");
     expect(ics.split("\r\n").every((line) => new TextEncoder().encode(line).length <= 75)).toBe(true);
+  });
+});
+
+describe("MIME message", () => {
+  it("builds a multipart message with a Unicode subject and filename", () => {
+    const raw = buildMimeMessage({
+      from: "A-Team <team@example.com>",
+      to: "dana@example.com",
+      replyTo: "client@example.com",
+      subject: "Бронь — 3 сентября",
+      html: "<p>Hello</p>",
+      text: "Hello",
+      attachments: [
+        {
+          filename: "Снимок экрана.png",
+          content: Buffer.from("fake-png").toString("base64"),
+          contentType: "image/png",
+        },
+      ],
+    });
+
+    // Non-ASCII headers must be RFC 2047 encoded, never sent raw.
+    expect(raw).toContain("Subject: =?UTF-8?B?");
+    expect(raw).not.toContain("Subject: Бронь");
+    expect(raw).toContain("Reply-To: client@example.com");
+    expect(raw).toContain("multipart/mixed");
+    expect(raw).toContain("multipart/alternative");
+    expect(raw).toContain("Content-Type: text/plain; charset=utf-8");
+    expect(raw).toContain("Content-Type: text/html; charset=utf-8");
+    // RFC 2231 keeps the Cyrillic attachment name intact.
+    expect(raw).toContain(`filename*=UTF-8''${encodeURIComponent("Снимок экрана.png")}`);
+    expect(raw.split("\r\n").every((line) => line.length <= 998)).toBe(true);
+  });
+
+  it("extracts the envelope address from a display-name header", () => {
+    expect(bareAddress("A-Team <team@example.com>")).toBe("team@example.com");
+    expect(bareAddress("team@example.com")).toBe("team@example.com");
   });
 });

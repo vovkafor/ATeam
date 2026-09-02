@@ -70,7 +70,9 @@ function detectType(bytes: Uint8Array): keyof typeof ACCEPTED_FILE_TYPES | null 
 function safeFilename(raw: string, contentType: keyof typeof ACCEPTED_FILE_TYPES) {
   const base = raw.split(/[\\/]/).pop() || "attachment";
   const cleaned = base
-    .replace(/[^\w.\- ]+/g, "-")
+    // Keep Unicode letters and digits: the MIME layer encodes the name, so a
+    // Cyrillic filename no longer has to be flattened to dashes.
+    .replace(/[^\p{L}\p{N}._\- ]+/gu, "-")
     .replace(/-{2,}/g, "-")
     .replace(/^[.\-\s]+/, "")
     .slice(0, 120);
