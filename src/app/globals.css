@@ -2,24 +2,43 @@
 
 :root {
   --canvas: #fafafa;
+  --canvas-top: #ffffff;
+  --canvas-bottom: #f2f2f5;
   --panel: #f4f4f2;
+  --panel-raised: #fbfbfa;
   --ink: #090909;
   --muted: #666666;
   --line: #e5e5e5;
+  --line-soft: #ededed;
   --strong: #cacaca;
   --accent: #2455ff;
   --accent-hover: #1845dc;
+  --accent-soft: rgba(36, 85, 255, 0.08);
+  --signal-ok: #12a150;
+  --signal-warn: #d98218;
+  --signal-fail: #e0343a;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --shadow-raise: 0 1px 1px rgba(9, 9, 9, 0.03), 0 12px 28px -16px rgba(9, 9, 9, 0.18);
+  --shadow-accent: 0 10px 30px -14px rgba(36, 85, 255, 0.65);
 }
 
 @theme inline {
   --color-canvas: var(--canvas);
   --color-panel: var(--panel);
+  --color-panel-raised: var(--panel-raised);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
   --color-strong: var(--strong);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-signal-ok: var(--signal-ok);
+  --color-signal-warn: var(--signal-warn);
+  --color-signal-fail: var(--signal-fail);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --text-hero: clamp(3.2rem, 6.4vw, 5.2rem);
@@ -31,16 +50,19 @@
 * { box-sizing: border-box; }
 
 html {
-  background: var(--canvas);
+  background: var(--canvas-bottom);
   scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
   overflow-x: hidden;
-  background: var(--canvas);
   color: var(--ink);
   font-family: var(--font-geist-sans), sans-serif;
+  background:
+    radial-gradient(120rem 46rem at 50% -14rem, rgba(36, 85, 255, 0.055), transparent 62%),
+    linear-gradient(180deg, var(--canvas-top) 0%, #fbfbfc 42%, var(--canvas-bottom) 100%);
+  background-attachment: fixed;
 }
 
 a, button, summary { -webkit-tap-highlight-color: transparent; }
@@ -60,6 +82,8 @@ button, summary { cursor: pointer; }
   color: var(--muted);
 }
 
+/* ---------------------------------------------------------------- surfaces */
+
 .technical-grid {
   background-image:
     linear-gradient(to right, var(--line) 1px, transparent 1px),
@@ -67,7 +91,303 @@ button, summary { cursor: pointer; }
   background-size: 48px 48px;
 }
 
-.graph-node { animation: node-pulse 2.8s ease-in-out infinite; }
+/* Grid whose lines brighten toward the accent when an ancestor is hovered. */
+.reactive-grid {
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  transition: background-size 700ms var(--ease-out-expo), opacity 500ms ease;
+}
+
+.group:hover .reactive-grid,
+.reactive-grid:hover {
+  background-image:
+    linear-gradient(to right, rgba(36, 85, 255, 0.28) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(36, 85, 255, 0.28) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.surface {
+  background: linear-gradient(180deg, var(--panel-raised), var(--panel));
+}
+
+.glass {
+  background: rgba(252, 252, 253, 0.9);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+}
+
+.glass-scrolled {
+  background: rgba(250, 250, 251, 0.94);
+  box-shadow: 0 1px 0 rgba(9, 9, 9, 0.06), 0 18px 40px -34px rgba(9, 9, 9, 0.5);
+}
+
+/* Without backdrop-filter the panel must carry its own opacity. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: rgba(252, 252, 253, 0.98); }
+  .glass-scrolled { background: rgba(250, 250, 251, 0.99); }
+}
+
+.raise {
+  transition: transform 520ms var(--ease-out-expo), box-shadow 520ms var(--ease-out-expo), background-color 400ms ease;
+  will-change: transform;
+}
+
+.group:hover .raise,
+.raise:hover {
+  transform: translateY(-6px) scale(1.004);
+  box-shadow: var(--shadow-raise);
+}
+
+.glow-accent {
+  box-shadow: var(--shadow-accent);
+}
+
+/* Thin accent line that draws in from the left on hover. */
+.rule-draw {
+  position: relative;
+}
+
+.rule-draw::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 1px;
+  width: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 620ms var(--ease-out-expo);
+}
+
+.group:hover .rule-draw::after,
+.rule-draw:hover::after { transform: scaleX(1); }
+
+/* ------------------------------------------------------------ scroll reveal */
+
+html[data-reveal-ready] [data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 900ms var(--ease-out-expo),
+    transform 900ms var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+html[data-reveal-ready] [data-reveal="scale"] { transform: translateY(22px) scale(0.985); }
+html[data-reveal-ready] [data-reveal="left"] { transform: translateX(-26px); }
+html[data-reveal-ready] [data-reveal="right"] { transform: translateX(26px); }
+
+html[data-reveal-ready] [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* --------------------------------------------------------- text entrance */
+
+.text-rise > span {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  /* Keep descenders (g, y, p) from being clipped by the reveal mask. */
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.text-rise > span > span {
+  display: inline-block;
+  transform: translateY(105%);
+  opacity: 0;
+  animation: word-rise 1s var(--ease-out-expo) forwards;
+  animation-delay: calc(var(--word-index, 0) * 55ms + var(--rise-delay, 0ms));
+}
+
+@keyframes word-rise {
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.fade-up-delayed {
+  opacity: 0;
+  animation: fade-up 900ms var(--ease-out-expo) forwards;
+  animation-delay: var(--rise-delay, 0ms);
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------------------------------------------------ instruments */
+
+.instrument {
+  transform: translate3d(
+    calc(var(--parallax-x, 0) * var(--depth, 6px)),
+    calc(var(--parallax-y, 0) * var(--depth, 6px)),
+    0
+  );
+  transition: transform 700ms var(--ease-out-quart), border-color 400ms ease, box-shadow 500ms ease;
+  will-change: transform;
+}
+
+.bar-grow {
+  transform: scaleY(0.06);
+  transform-origin: bottom;
+  animation: bar-grow 900ms var(--ease-out-expo) forwards;
+  animation-delay: calc(var(--bar-index, 0) * 45ms);
+}
+
+@keyframes bar-grow {
+  to { transform: scaleY(1); }
+}
+
+.cell-light {
+  opacity: 0;
+  animation: cell-light 2.4s var(--ease-out-quart) infinite;
+  animation-delay: calc(var(--cell-index, 0) * 38ms);
+}
+
+@keyframes cell-light {
+  0% { opacity: 0; transform: scale(0.72); }
+  14% { opacity: 1; transform: scale(1); }
+  62% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.14; transform: scale(1); }
+}
+
+/* Dotted stroke that travels along a path — the API data-flow packets. */
+.packet-stream {
+  stroke-linecap: round;
+  stroke-dasharray: 0.5 13;
+  animation: packet-stream 1.6s linear infinite;
+  animation-delay: calc(var(--stream-index, 0) * -0.4s);
+}
+
+@keyframes packet-stream {
+  to { stroke-dashoffset: -13.5; }
+}
+
+/* transform-origin is set per breakpoint by the caller (top on mobile stacks,
+   left on the horizontal row), so it is deliberately not declared here. */
+.connector-fill {
+  transform: scale3d(0, 0, 1);
+  animation: connector-fill 4.8s var(--ease-out-quart) infinite;
+  animation-delay: calc(var(--stage-index, 0) * 0.55s + 0.2s);
+}
+
+@keyframes connector-fill {
+  0%, 4% { transform: scale3d(0, 0, 1); }
+  16%, 64% { transform: scale3d(1, 1, 1); }
+  78%, 100% { transform: scale3d(0, 0, 1); }
+}
+
+.radar-in {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.2);
+  opacity: 0;
+  animation: radar-in 1.4s var(--ease-out-expo) forwards;
+  animation-delay: var(--radar-delay, 0ms);
+}
+
+@keyframes radar-in {
+  to { transform: scale(1); opacity: 1; }
+}
+
+.stage-run {
+  animation: stage-run 4.8s var(--ease-out-quart) infinite;
+  animation-delay: calc(var(--stage-index, 0) * 0.55s);
+}
+
+@keyframes stage-run {
+  0%, 6% { opacity: 0.22; }
+  14%, 62% { opacity: 1; }
+  100% { opacity: 0.22; }
+}
+
+.trace-draw {
+  stroke-dasharray: var(--trace-length, 1000);
+  stroke-dashoffset: var(--trace-length, 1000);
+  animation: trace-draw 2.2s var(--ease-out-expo) forwards;
+  animation-delay: var(--trace-delay, 0ms);
+}
+
+@keyframes trace-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.ring-fill {
+  stroke-dasharray: var(--ring-circumference, 440);
+  stroke-dashoffset: var(--ring-circumference, 440);
+  animation: ring-fill 1.9s var(--ease-out-expo) forwards;
+  animation-delay: 320ms;
+}
+
+@keyframes ring-fill {
+  to { stroke-dashoffset: var(--ring-target, 120); }
+}
+
+.graph-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: node-pulse 2.8s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------- custom cursor */
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: 9999px;
+  opacity: 0;
+  transition: opacity 260ms ease, width 260ms var(--ease-out-expo),
+    height 260ms var(--ease-out-expo), background-color 260ms ease, border-color 260ms ease;
+}
+
+.cursor-dot {
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  background: var(--accent);
+}
+
+.cursor-ring {
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 1px solid rgba(36, 85, 255, 0.42);
+}
+
+html[data-cursor="on"] .cursor-dot,
+html[data-cursor="on"] .cursor-ring { opacity: 1; }
+
+html[data-cursor="on"][data-cursor-hover="true"] .cursor-dot {
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+}
+
+html[data-cursor="on"][data-cursor-hover="true"] .cursor-ring {
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+@media (pointer: fine) {
+  html[data-cursor="on"],
+  html[data-cursor="on"] a,
+  html[data-cursor="on"] button,
+  html[data-cursor="on"] summary,
+  html[data-cursor="on"] [role="button"] { cursor: none; }
+}
+
+/* ------------------------------------------------------------------ misc */
 
 .route-transition {
   animation: route-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -104,4 +424,9 @@ button, summary { cursor: pointer; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  html[data-reveal-ready] [data-reveal] { opacity: 1; transform: none; }
+  .text-rise > span > span { transform: none; opacity: 1; }
+  .fade-up-delayed { opacity: 1; }
+  .instrument { transform: none; }
+  .cursor-dot, .cursor-ring { display: none; }
 }

@@ -10,13 +10,27 @@ export function CTASection({
 }) {
   return (
     <Container>
-      <section className="grid border-b border-line bg-ink text-white lg:grid-cols-[1.35fr_0.65fr]">
-        <div className="p-5 md:p-10 lg:p-16">
+      <section className="relative grid overflow-hidden border-b border-line bg-ink text-white lg:grid-cols-[1.35fr_0.65fr]">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-32 -top-40 h-[28rem] w-[28rem] rounded-full bg-accent/25 blur-[110px]"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
+
+        <div className="relative p-5 md:p-10 lg:p-16">
           <p className="font-mono text-[11px] tracking-[0.12em] text-white/55">NEXT RELEASE / START HERE</p>
-          <h2 className="mt-12 max-w-4xl text-section font-medium leading-[1.02] tracking-[-0.05em]">{title}</h2>
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-white/65">{description}</p>
+          <h2 data-reveal className="mt-12 max-w-4xl text-section font-medium leading-[1.02] tracking-[-0.05em]">{title}</h2>
+          <p data-reveal className="mt-7 max-w-2xl text-lg leading-8 text-white/65">{description}</p>
         </div>
-        <div className="flex items-end border-t border-white/15 p-5 md:p-10 lg:border-l lg:border-t-0 lg:p-16">
+        <div className="relative flex items-end border-t border-white/15 p-5 md:p-10 lg:border-l lg:border-t-0 lg:p-16">
           <ButtonLink href="/book" variant="inverse" className="w-full">
             Book a 30-minute call
           </ButtonLink>

@@ -3,6 +3,9 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { CustomCursor } from "@/components/motion/custom-cursor";
+import { ScrollReveal } from "@/components/motion/scroll-reveal";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -50,6 +53,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <a className="skip-link" href="#main-content">Skip to content</a>
+        <SmoothScroll />
+        <ScrollReveal />
+        <CustomCursor />
         <SiteHeader />
         {children}
         <SiteFooter />
