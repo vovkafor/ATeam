@@ -5,9 +5,9 @@ import { BookingFileInput } from "@/components/booking/booking-file-input";
 import type { BookingState } from "@/lib/booking/types";
 
 const fieldClass =
-  "mt-2 min-h-12 w-full border border-line bg-white px-4 text-sm outline-none transition-[border-color,box-shadow] duration-300 focus:border-accent focus:ring-2 focus:ring-accent/15 disabled:cursor-not-allowed disabled:bg-panel/60";
+  "mt-2 min-h-12 w-full border border-line bg-transparent px-4 text-sm outline-none transition-[border-color,box-shadow] duration-500 placeholder:text-strong focus:border-accent focus:ring-1 focus:ring-accent/25 disabled:cursor-not-allowed disabled:opacity-50";
 
-const labelClass = "block font-mono text-[10px] uppercase tracking-[0.1em] text-muted";
+const labelClass = "block font-mono text-[10px] uppercase tracking-[0.12em] text-strong";
 
 function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
@@ -40,7 +40,7 @@ export function BookingForm({
   const formError = state.status === "error" && Object.keys(errors).length === 0 ? state.message : undefined;
 
   return (
-    <form className="bg-canvas p-5 md:p-7" action={action} noValidate>
+    <form className="p-6 md:p-8" action={action} noValidate>
       {/* The slot lives in the calendar panel; these carry it with the submission. */}
       <input type="hidden" name="date" value={dateValue} />
       <input type="hidden" name="time" value={timeValue} />
@@ -121,7 +121,7 @@ export function BookingForm({
           disabled={pending}
           aria-invalid={Boolean(errors.challenge)}
           aria-describedby={errors.challenge ? "booking-challenge-error" : undefined}
-          className="mt-2 w-full resize-y border border-line bg-white p-4 text-sm leading-6 outline-none transition-[border-color,box-shadow] duration-300 focus:border-accent focus:ring-2 focus:ring-accent/15 disabled:cursor-not-allowed disabled:bg-panel/60"
+          className="mt-2 w-full resize-y border border-line bg-transparent p-4 text-sm leading-6 outline-none transition-[border-color,box-shadow] duration-500 placeholder:text-strong focus:border-accent focus:ring-1 focus:ring-accent/25 disabled:cursor-not-allowed disabled:opacity-50"
         />
         <FieldError id="booking-challenge-error" message={errors.challenge} />
       </div>
@@ -131,7 +131,7 @@ export function BookingForm({
       <button
         type="submit"
         disabled={pending}
-        className="group/btn relative mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden border border-accent bg-gradient-to-r from-accent to-[#4a72ff] px-5 font-medium text-white shadow-[0_10px_30px_-14px_rgba(36,85,255,0.95)] transition-[transform,box-shadow,opacity] duration-500 hover:-translate-y-0.5 hover:shadow-[0_18px_38px_-14px_rgba(36,85,255,1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:translate-y-0 disabled:opacity-70 disabled:shadow-none"
+        className="group/btn relative mt-8 inline-flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden bg-ink px-5 font-medium text-white transition-[background-color,opacity] duration-500 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:opacity-50"
       >
         {pending ? null : (
           <span

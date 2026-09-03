@@ -49,7 +49,7 @@ export function SectionHeader({
 
 export function TechBadge({ children }: { children: ReactNode }) {
   return (
-    <span className="border border-line bg-canvas/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-muted transition-colors duration-500 hover:border-accent/50 hover:bg-accent/[0.06] hover:text-accent">
+    <span className="bg-[color-mix(in_oklab,var(--panel)_70%,white)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted transition-colors duration-500 hover:bg-accent/[0.07] hover:text-accent">
       {children}
     </span>
   );

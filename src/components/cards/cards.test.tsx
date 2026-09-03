@@ -15,6 +15,11 @@ describe("data-driven cards", () => {
   it("renders a case study route and all metrics", () => {
     render(<ProjectCard project={projects[0]} />);
     expect(screen.getByRole("link", { name: /read case study/i })).toHaveAttribute("href", `/work/${projects[0].slug}`);
-    projects[0].metrics.forEach((metric) => expect(screen.getByText(metric.value)).toBeInTheDocument());
+    // Each metric renders twice by design: an aria-hidden animated copy and a
+    // screen-reader copy carrying the exact authored value.
+    projects[0].metrics.forEach((metric) => {
+      expect(screen.getAllByText(metric.value).length).toBeGreaterThan(0);
+      expect(document.querySelector(".sr-only")).toBeInTheDocument();
+    });
   });
 });

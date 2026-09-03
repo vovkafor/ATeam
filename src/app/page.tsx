@@ -2,17 +2,16 @@ import type { CSSProperties } from "react";
 import { Braces, Gauge, GitBranch, MonitorCheck } from "lucide-react";
 import { TrackLink } from "@/components/analytics/track-link";
 import { ProjectCard } from "@/components/cards/project-card";
-import { ServiceCard } from "@/components/cards/service-card";
 import { TeamCard } from "@/components/cards/team-card";
-import { ParallaxScene } from "@/components/motion/parallax-scene";
 import { TextRise } from "@/components/motion/text-rise";
 import { CTASection } from "@/components/sections/cta-section";
+import { ServicesBento } from "@/components/sections/services-bento";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Container, Eyebrow, Section, SectionHeader } from "@/components/ui/primitives";
-import { HeroInstruments } from "@/components/visuals/hero-instruments";
+import { CineTile } from "@/components/visuals/cine-tile";
+import { QualityGraphClip, ReleasePipelineClip, TerminalClip } from "@/components/visuals/clips";
 import { processStages } from "@/content/process";
 import { projects } from "@/content/projects";
-import { services } from "@/content/services";
 import { team } from "@/content/team";
 
 const capabilities = [
@@ -25,47 +24,54 @@ const capabilities = [
 export default function Home() {
   return (
     <main id="main-content" className="flex-1">
-      <Container>
-        <ParallaxScene className="flex min-h-[560px] flex-col justify-between border-b border-line lg:min-h-[720px]">
-          <section className="flex flex-1 flex-col justify-between p-5 md:p-10">
-            <Eyebrow className="fade-up-delayed">AUTOMATED QUALITY / CONTINUOUS DELIVERY</Eyebrow>
+      <Container className="border-x-0 md:border-x">
+        <section className="px-5 pt-24 pb-16 md:px-12 md:pt-36 md:pb-24 lg:px-16">
+          <Eyebrow className="fade-up-delayed">AUTOMATED QUALITY / CONTINUOUS DELIVERY</Eyebrow>
 
-            <div className="py-16 lg:py-10">
-              <h1 className="max-w-[1050px] text-hero font-medium leading-[0.96] tracking-[-0.055em]">
-                <TextRise text="Testing infrastructure built to ship." delay={120} />
-              </h1>
-              <p
-                className="fade-up-delayed mt-8 max-w-xl text-lg leading-8 text-muted md:text-xl"
-                style={{ "--rise-delay": "520ms" } as CSSProperties}
-              >
-                We design and build automated testing systems that help engineering teams release reliable software
-                faster.
-              </p>
-              <div
-                className="fade-up-delayed mt-10 flex flex-col gap-3 min-[420px]:flex-row"
-                style={{ "--rise-delay": "660ms" } as CSSProperties}
-              >
-                <TrackLink
-                  href="/book"
-                  event="book_call_clicked"
-                  properties={{ location: "homepage_hero" }}
-                  className="group/btn relative inline-flex min-h-12 items-center justify-center overflow-hidden border border-accent bg-gradient-to-r from-accent to-[#4a72ff] px-5 font-medium text-white shadow-[0_10px_30px_-14px_rgba(36,85,255,0.95)] transition-[transform,box-shadow] duration-500 hover:-translate-y-0.5 hover:shadow-[0_18px_38px_-14px_rgba(36,85,255,1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/btn:translate-x-full"
-                  />
-                  <span className="relative">Book a call</span>
-                </TrackLink>
-                <ButtonLink href="/work" variant="secondary">See our work</ButtonLink>
-              </div>
-            </div>
-          </section>
+          <h1 className="mt-12 max-w-[16ch] text-hero font-medium leading-[0.92] tracking-[-0.055em] md:mt-16">
+            <TextRise text="Testing infrastructure built to ship." delay={120} />
+          </h1>
 
-          <div className="fade-up-delayed" style={{ "--rise-delay": "820ms" } as CSSProperties}>
-            <HeroInstruments />
+          <p
+            className="fade-up-delayed mt-10 max-w-md text-lg leading-8 text-muted md:text-xl"
+            style={{ "--rise-delay": "520ms" } as CSSProperties}
+          >
+            Automated testing built around your release process.
+          </p>
+
+          <div
+            className="fade-up-delayed mt-12 flex flex-wrap items-center gap-x-8 gap-y-4"
+            style={{ "--rise-delay": "660ms" } as CSSProperties}
+          >
+            <TrackLink
+              href="/book"
+              event="book_call_clicked"
+              properties={{ location: "homepage_hero" }}
+              className="group/cta inline-flex items-center gap-3 text-[15px] font-medium text-accent transition-colors duration-500 hover:text-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+            >
+              Book a call
+              <span aria-hidden="true" className="transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/cta:translate-x-1">
+                →
+              </span>
+            </TrackLink>
+            <ButtonLink href="/work" variant="text" className="text-[15px] text-muted hover:text-ink">
+              See our work
+            </ButtonLink>
           </div>
-        </ParallaxScene>
+        </section>
+
+        {/* Three looping clips: the work itself, rather than a chart about it. */}
+        <section aria-label="How the system behaves" className="grid gap-10 px-5 pb-24 md:grid-cols-3 md:gap-8 md:px-12 md:pb-32 lg:px-16">
+          <CineTile caption="Fast Feedback Loops" index={0}>
+            <TerminalClip />
+          </CineTile>
+          <CineTile caption="High Code Quality" index={1}>
+            <QualityGraphClip />
+          </CineTile>
+          <CineTile caption="Complete Release Control" index={2}>
+            <ReleasePipelineClip />
+          </CineTile>
+        </section>
       </Container>
 
       <Container>
@@ -103,8 +109,8 @@ export default function Home() {
       <Container>
         <Section>
           <SectionHeader eyebrow="SERVICES / 05" title="What we automate." description="Focused systems for browser, service, delivery, performance, and quality architecture work." />
-          <div className="grid border-t border-line lg:grid-cols-5">
-            {services.map((service, index) => <ServiceCard key={service.slug} service={service} index={index} />)}
+          <div className="px-5 pb-20 md:px-10 md:pb-28">
+            <ServicesBento />
           </div>
         </Section>
       </Container>
@@ -112,7 +118,9 @@ export default function Home() {
       <Container>
         <Section>
           <SectionHeader eyebrow="SELECTED WORK / 03" title="Automation measured in outcomes." description="Demonstration case studies showing how we structure release, integration, and performance engagements." />
-          {projects.map((project) => <ProjectCard key={project.slug} project={project} />)}
+          <div className="flex flex-col gap-5 px-5 pb-20 md:gap-6 md:px-10 md:pb-28">
+            {projects.map((project) => <ProjectCard key={project.slug} project={project} />)}
+          </div>
         </Section>
       </Container>
 

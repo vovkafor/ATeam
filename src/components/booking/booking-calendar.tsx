@@ -197,7 +197,7 @@ function BookingPlanner() {
 
   if (showSuccess && state.status === "success") {
     return (
-      <div className="overflow-hidden border border-line bg-white" data-testid="booking-planner">
+      <div className="overflow-hidden border border-line" data-testid="booking-planner">
         <BookingSuccess
           confirmation={state.confirmation}
           onReset={() => {
@@ -210,7 +210,7 @@ function BookingPlanner() {
   }
 
   return (
-    <div className="overflow-hidden border border-line bg-white" data-testid="booking-planner">
+    <div className="overflow-hidden border border-line" data-testid="booking-planner">
       <div className="flex flex-col gap-4 border-b border-line p-5 sm:flex-row sm:items-center sm:justify-between md:p-7">
         <div>
           <p className="font-mono text-[10px] tracking-[0.12em] text-accent">SELECT A TIME</p>
@@ -234,7 +234,7 @@ function BookingPlanner() {
                 aria-label="Previous month"
                 disabled={!canGoBack}
                 onClick={() => changeMonth(-1)}
-                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:bg-transparent disabled:hover:text-ink"
+                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors duration-500 hover:border-ink hover:bg-ink hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:bg-transparent disabled:hover:text-ink"
               >
                 <ChevronLeft aria-hidden="true" size={17} />
               </button>
@@ -242,7 +242,7 @@ function BookingPlanner() {
                 type="button"
                 aria-label="Next month"
                 onClick={() => changeMonth(1)}
-                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white"
+                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors duration-500 hover:border-ink hover:bg-ink hover:text-white"
               >
                 <ChevronRight aria-hidden="true" size={17} />
               </button>
@@ -285,7 +285,7 @@ function BookingPlanner() {
                   aria-pressed={selectedTime === entry.slot}
                   disabled={entry.past || pending}
                   onClick={() => setSelectedTime(entry.slot)}
-                  className={`min-h-11 border px-3 font-mono text-[11px] transition-colors duration-300 ${selectedTime === entry.slot ? "border-ink bg-ink text-white" : "border-line bg-white text-muted hover:border-ink hover:text-ink"} disabled:cursor-not-allowed disabled:border-line disabled:bg-panel/60 disabled:text-strong disabled:hover:text-strong`}
+                  className={`min-h-11 border px-3 font-mono text-[11px] transition-colors duration-300 ${selectedTime === entry.slot ? "border-ink bg-ink text-white" : "border-line bg-transparent text-muted hover:border-ink hover:text-ink"} disabled:cursor-not-allowed disabled:border-line disabled:opacity-40 disabled:text-strong disabled:hover:text-strong`}
                 >
                   {entry.label}
                   {entry.dayShift !== 0 ? (
@@ -307,7 +307,7 @@ function BookingPlanner() {
                 value={timeZone}
                 disabled={pending}
                 onChange={(event) => setChosenTimeZone(event.target.value)}
-                className="mt-2 min-h-11 w-full border border-line bg-white px-3 text-sm outline-none transition-[border-color,box-shadow] duration-300 focus:border-accent focus:ring-2 focus:ring-accent/15 disabled:cursor-not-allowed disabled:bg-panel/60"
+                className="mt-2 min-h-11 w-full border border-line bg-transparent px-3 text-sm outline-none transition-[border-color,box-shadow] duration-500 focus:border-accent focus:ring-1 focus:ring-accent/25 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {timezoneChoices.map((zone) => (
                   <option key={zone} value={zone}>

@@ -59,6 +59,8 @@ export type TeamMember = {
   role: string;
   /** One line on what this person is for, shown under the role. */
   focus: string;
+  /** Live-status line rendered in the portrait HUD on hover. */
+  status: string;
   description: string;
   technologies: string[];
   /** What this engineer is distinctly good at — not a duplicate of the tech list. */

@@ -57,6 +57,15 @@ describe("TeamCard", () => {
     expect(screen.queryByText("Apple Developer Academy")).not.toBeInTheDocument();
   });
 
+  it("reports a live status in the portrait HUD, decoratively", () => {
+    const { container } = render(<TeamCard member={myron} />);
+
+    expect(screen.getByText("CI pipeline running")).toBeInTheDocument();
+    // The HUD is ornamentation over the photo: hidden from assistive tech.
+    expect(container.querySelector(".hud")).toHaveAttribute("aria-hidden", "true");
+    expect(container.querySelectorAll(".hud-bracket")).toHaveLength(4);
+  });
+
   it("gives every member a unique slug for keys and routing", () => {
     expect(new Set(team.map((member) => member.slug)).size).toBe(team.length);
   });

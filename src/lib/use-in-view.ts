@@ -40,8 +40,17 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(threshold = 0.
   return { ref, inView };
 }
 
+/** Not every environment implements matchMedia (jsdom, some embedded views). */
+function reducedMotionQuery() {
+  return typeof window !== "undefined" && typeof window.matchMedia === "function"
+    ? window.matchMedia(REDUCED_MOTION_QUERY)
+    : null;
+}
+
 function subscribeToReducedMotion(onChange: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION_QUERY);
+  const query = reducedMotionQuery();
+  if (!query) return () => undefined;
+
   query.addEventListener("change", onChange);
   return () => query.removeEventListener("change", onChange);
 }
@@ -49,7 +58,7 @@ function subscribeToReducedMotion(onChange: () => void) {
 export function usePrefersReducedMotion() {
   return useSyncExternalStore(
     subscribeToReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION_QUERY).matches,
+    () => reducedMotionQuery()?.matches ?? false,
     () => false,
   );
 }

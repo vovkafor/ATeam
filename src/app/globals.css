@@ -8,15 +8,19 @@
   --panel-raised: #fbfbfa;
   --ink: #090909;
   --muted: #666666;
-  --line: #e5e5e5;
-  --line-soft: #ededed;
-  --strong: #cacaca;
+  /* Hairlines are deliberately faint: structure should be felt, not drawn. */
+  --line: rgba(10, 10, 12, 0.07);
+  --line-soft: rgba(10, 10, 12, 0.04);
+  --strong: rgba(10, 10, 12, 0.16);
   --accent: #2455ff;
   --accent-hover: #1845dc;
   --accent-soft: rgba(36, 85, 255, 0.08);
   --signal-ok: #12a150;
   --signal-warn: #d98218;
   --signal-fail: #e0343a;
+  --clip-ok: #16a34a;
+  --clip-warn: #d97706;
+  --clip-fail: #dc2626;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
@@ -39,10 +43,13 @@
   --color-signal-ok: var(--signal-ok);
   --color-signal-warn: var(--signal-warn);
   --color-signal-fail: var(--signal-fail);
+  --color-clip-ok: var(--clip-ok);
+  --color-clip-warn: var(--clip-warn);
+  --color-clip-fail: var(--clip-fail);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --text-hero: clamp(3.2rem, 6.4vw, 5.2rem);
-  --text-section: clamp(2.4rem, 4.5vw, 3.75rem);
+  --text-hero: clamp(3.4rem, 7.2vw, 6.4rem);
+  --text-section: clamp(2.2rem, 4.2vw, 3.4rem);
   --container-site: 90rem;
   --spacing-site: 1440px;
 }
@@ -383,4 +390,327 @@ html[data-reveal-ready] [data-reveal][data-revealed] {
   .text-rise > span > span { transform: none; opacity: 1; }
   .fade-up-delayed { opacity: 1; }
   .instrument { transform: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════ cine tiles ══
+   Looping "clips" built from CSS instead of video: sharp at any density,
+   a few kilobytes instead of megabytes, and they hold a still frame under
+   prefers-reduced-motion rather than needing a poster image.
+   Every clip shares one 9s timeline so the three tiles breathe together. */
+
+.cine {
+  --cine-duration: 9s;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Soft light that follows the pointer across a tile. */
+.cine-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  background: radial-gradient(
+    22rem 22rem at var(--pointer-x, 50%) var(--pointer-y, 50%),
+    rgba(36, 85, 255, 0.09),
+    transparent 68%
+  );
+  transition: opacity 600ms ease;
+}
+
+.cine:hover .cine-glow { opacity: 1; }
+
+/* ── clip 1: terminal ── */
+.term-line {
+  opacity: 0;
+  animation: term-line var(--cine-duration) linear infinite;
+  animation-delay: calc(var(--line-index, 0) * 420ms);
+}
+
+@keyframes term-line {
+  0%, 2% { opacity: 0; transform: translateY(3px); }
+  6%, 88% { opacity: 1; transform: none; }
+  95%, 100% { opacity: 0; transform: none; }
+}
+
+.term-caret {
+  animation: term-caret 1.1s steps(2, end) infinite;
+}
+
+@keyframes term-caret { 50% { opacity: 0; } }
+
+/* ── clip 2: quality graph ── */
+.scan-sweep {
+  animation: scan-sweep var(--cine-duration) cubic-bezier(0.45, 0, 0.15, 1) infinite;
+}
+
+@keyframes scan-sweep {
+  0% { transform: translateX(-14%); opacity: 0; }
+  8% { opacity: 1; }
+  60% { transform: translateX(104%); opacity: 1; }
+  70%, 100% { transform: translateX(104%); opacity: 0; }
+}
+
+/* A node flags amber as the sweep reaches it, then settles green. */
+.node-check {
+  animation: node-check var(--cine-duration) ease-in-out infinite;
+  animation-delay: calc(var(--node-index, 0) * 460ms);
+}
+
+@keyframes node-check {
+  0%, 10% { fill: var(--strong); r: 4; }
+  16% { fill: var(--clip-warn); r: 6.5; }
+  30% { fill: var(--clip-warn); r: 6.5; }
+  44%, 92% { fill: var(--clip-ok); r: 4.5; }
+  100% { fill: var(--strong); r: 4; }
+}
+
+.edge-trace {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: edge-trace var(--cine-duration) ease-in-out infinite;
+  animation-delay: calc(var(--node-index, 0) * 460ms);
+}
+
+@keyframes edge-trace {
+  0%, 12% { stroke-dashoffset: 120; opacity: 0; }
+  40%, 90% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 120; opacity: 0; }
+}
+
+/* ── clip 3: release pipeline ── */
+.rail-token {
+  animation: rail-token var(--cine-duration) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes rail-token {
+  0%, 4% { left: 0%; opacity: 0; }
+  8% { opacity: 1; }
+  66% { left: 100%; opacity: 1; }
+  74%, 100% { left: 100%; opacity: 0; }
+}
+
+.rail-fill {
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: rail-fill var(--cine-duration) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes rail-fill {
+  0%, 4% { transform: scaleX(0); }
+  66%, 88% { transform: scaleX(1); }
+  100% { transform: scaleX(0); }
+}
+
+.stage-lit {
+  animation: stage-lit var(--cine-duration) ease-out infinite;
+  animation-delay: calc(var(--stage-slot, 0) * 900ms);
+}
+
+@keyframes stage-lit {
+  0%, 6% { color: var(--muted); opacity: 0.45; }
+  12%, 88% { color: var(--ink); opacity: 1; }
+  100% { color: var(--muted); opacity: 0.45; }
+}
+
+.deployed-chip {
+  opacity: 0;
+  animation: deployed-chip var(--cine-duration) cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes deployed-chip {
+  0%, 62% { opacity: 0; transform: scale(0.9); }
+  70%, 90% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+/* Reduced motion: every clip freezes on its most legible frame. */
+@media (prefers-reduced-motion: reduce) {
+  .term-line, .node-check, .edge-trace, .stage-lit { opacity: 1; }
+  .edge-trace { stroke-dashoffset: 0; }
+  .node-check { fill: var(--clip-ok); }
+  .rail-fill { transform: scaleX(1); }
+  .deployed-chip { opacity: 1; }
+  .rail-token, .scan-sweep, .term-caret { display: none; }
+}
+
+/* ══════════════════════════════════════════════════ stage 2: service clips ══ */
+
+/* Reusable pointer spotlight — the Hero tile effect, available to any surface. */
+.spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    26rem 26rem at var(--pointer-x, 50%) var(--pointer-y, 50%),
+    rgba(36, 85, 255, 0.07),
+    transparent 70%
+  );
+  transition: opacity 600ms ease;
+}
+
+.group:hover > .spotlight,
+.spotlight-host:hover > .spotlight { opacity: 1; }
+
+/* ── Web UI: visual diff between the design and the rendered DOM ── */
+.diff-block {
+  animation: diff-block var(--cine-duration) ease-in-out infinite;
+  animation-delay: calc(var(--diff-index, 0) * 320ms);
+}
+
+@keyframes diff-block {
+  0%, 12% { transform: translateX(7px); fill: var(--clip-fail); fill-opacity: 0.16; stroke: var(--clip-fail); }
+  40%, 52% { transform: translateX(7px); fill: var(--clip-fail); fill-opacity: 0.16; stroke: var(--clip-fail); }
+  66%, 90% { transform: translateX(0); fill: var(--clip-ok); fill-opacity: 0.14; stroke: var(--clip-ok); }
+  100% { transform: translateX(7px); fill: var(--clip-fail); fill-opacity: 0.16; stroke: var(--clip-fail); }
+}
+
+.diff-count {
+  animation: diff-count var(--cine-duration) steps(1, end) infinite;
+}
+
+@keyframes diff-count {
+  0%, 62% { opacity: 1; }
+  66%, 100% { opacity: 0; }
+}
+
+.diff-clear {
+  animation: diff-clear var(--cine-duration) steps(1, end) infinite;
+}
+
+@keyframes diff-clear {
+  0%, 62% { opacity: 0; }
+  66%, 92% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ── CI/CD: the suite fanning out across four workers ── */
+.worker-fill {
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: worker-fill var(--cine-duration) infinite;
+  animation-delay: calc(var(--lane, 0) * 160ms);
+}
+
+/* Same duration keeps the lanes on the shared loop; the easing is what makes
+   each worker finish at its own pace. */
+.worker-fill[data-lane="0"] { animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1); }
+.worker-fill[data-lane="1"] { animation-timing-function: cubic-bezier(0.5, 0, 0.3, 1); }
+.worker-fill[data-lane="2"] { animation-timing-function: cubic-bezier(0.2, 0, 0.45, 1); }
+.worker-fill[data-lane="3"] { animation-timing-function: cubic-bezier(0.42, 0, 0.18, 1); }
+
+@keyframes worker-fill {
+  0%, 6% { transform: scaleX(0); }
+  58%, 88% { transform: scaleX(1); }
+  100% { transform: scaleX(0); }
+}
+
+.worker-tick {
+  opacity: 0;
+  animation: worker-tick var(--cine-duration) ease-out infinite;
+  animation-delay: calc(var(--lane, 0) * 160ms);
+}
+
+@keyframes worker-tick {
+  0%, 56% { opacity: 0; transform: scale(0.6); }
+  62%, 88% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.6); }
+}
+
+/* ── Metrics that resolve from a "before" value to an "after" value ── */
+.metric-from {
+  transition: opacity 700ms var(--ease-out-expo), transform 700ms var(--ease-out-expo);
+}
+
+.metric-to {
+  transition: opacity 900ms var(--ease-out-expo) 160ms, transform 900ms var(--ease-out-expo) 160ms;
+}
+
+.metric-idle .metric-to { opacity: 0; transform: translateY(8px); }
+.metric-idle .metric-from { opacity: 1; }
+.metric-live .metric-from { opacity: 0.32; }
+.metric-live .metric-to { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .diff-block, .diff-count, .diff-clear, .worker-fill, .worker-tick { animation: none; }
+  .diff-block { transform: none; fill: var(--clip-ok); fill-opacity: 0.14; stroke: var(--clip-ok); }
+  .diff-count { opacity: 0; }
+  .diff-clear { opacity: 1; }
+  .worker-fill { transform: scaleX(1); }
+  .worker-tick { opacity: 1; transform: none; }
+}
+
+/* ══════════════════════════════════════════════════ stage 3: team portraits ══ */
+
+/* Focus pull: the portrait sits monochrome and very slightly soft, then
+   resolves — colour and sharpness arrive together, like a lens finding focus. */
+.portrait {
+  filter: grayscale(1) contrast(1.04) blur(1.2px);
+  transform: scale(1.015);
+  transition:
+    filter 900ms var(--ease-out-expo),
+    transform 1100ms var(--ease-out-expo);
+}
+
+.group\/portrait:hover .portrait,
+.group\/portrait:focus-within .portrait {
+  filter: grayscale(0) contrast(1) blur(0);
+  transform: scale(1.05);
+}
+
+/* Engineering HUD that fades over the portrait on hover. */
+.hud {
+  opacity: 0;
+  transition: opacity 600ms var(--ease-out-expo);
+}
+
+.group\/portrait:hover .hud,
+.group\/portrait:focus-within .hud { opacity: 1; }
+
+.hud-grid {
+  background-image:
+    linear-gradient(to right, rgba(36, 85, 255, 0.16) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(36, 85, 255, 0.16) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Four corner brackets, drawn with borders on a single element each. */
+.hud-bracket {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--accent);
+}
+
+.hud-bracket-tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+.hud-bracket-tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+.hud-bracket-bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+.hud-bracket-br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+
+.hud-scan {
+  animation: hud-scan 3.4s cubic-bezier(0.45, 0, 0.15, 1) infinite;
+}
+
+@keyframes hud-scan {
+  0% { transform: translateY(-8%); opacity: 0; }
+  12%, 78% { opacity: 1; }
+  100% { transform: translateY(108%); opacity: 0; }
+}
+
+.hud-pulse {
+  animation: hud-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes hud-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portrait { filter: grayscale(1); transform: none; }
+  .group\/portrait:hover .portrait { filter: grayscale(0); transform: none; }
+  .hud-scan, .hud-pulse { animation: none; }
+  .hud-scan { display: none; }
 }

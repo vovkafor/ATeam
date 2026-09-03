@@ -7,6 +7,7 @@ export const team: TeamMember[] = [
     initials: "MS",
     role: "Senior QA Engineer",
     focus: "Mobile and web automation frameworks, built from an empty repository.",
+    status: "CI pipeline running",
     description:
       "Five years across iOS, Android and web — standing up automation where none existed, wiring it into GitLab CI, and turning long manual regression passes into a signal a team can release on.",
     technologies: ["Appium", "Cypress", "Selenium", "PyTest", "GitLab CI", "Postman", "SQL", "Docker"],
@@ -55,6 +56,7 @@ export const team: TeamMember[] = [
     initials: "VF",
     role: "QA Engineer — LLM & AI Evaluation",
     focus: "Evaluation frameworks for AI systems, alongside classic manual and automated QA.",
+    status: "Evaluation framework active",
     description:
       "Four years across web, mobile and AI-driven products. Scores model output where it actually breaks — factual accuracy, coherence, hallucination — and backs it with PyTest and Playwright suites running in CI.",
     technologies: ["Playwright", "PyTest", "Python", "Selenium", "Appium", "GitLab CI", "REST", "LLM Evaluation"],
