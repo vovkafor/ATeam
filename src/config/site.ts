@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "A-Team",
   shortName: "A-Team",
-  description: "Automated testing systems designed around your release process.",
+  description: "We turn the checks your team does by hand into tests a machine runs on every change.",
   email: process.env.NEXT_PUBLIC_COMPANY_EMAIL || "hello@example.com",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   bookingUrl: process.env.NEXT_PUBLIC_CALCOM_URL || "",
@@ -11,10 +11,10 @@ export const siteConfig = {
   upwork: process.env.NEXT_PUBLIC_UPWORK_URL || "",
 } as const;
 
+/* One page carries the pitch, so the nav points at sections of it. */
 export const navigation = [
-  { href: "/services", label: "Services" },
-  { href: "/work", label: "Work" },
-  { href: "/process", label: "Process" },
+  { href: "/#how", label: "What automation is" },
+  { href: "/#services", label: "What we do" },
+  { href: "/#process", label: "How we work" },
   { href: "/team", label: "Team" },
-  { href: "/about", label: "About" },
 ] as const;

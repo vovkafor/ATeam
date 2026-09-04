@@ -41,7 +41,7 @@ export function SiteHeader() {
         >
           <span
             aria-hidden="true"
-            className="relative grid h-7 w-7 place-items-center bg-gradient-to-br from-accent to-[#6d8bff] text-[11px] font-semibold text-white shadow-[0_6px_16px_-8px_rgba(36,85,255,0.9)] transition-transform duration-500 group-hover:scale-105"
+            className="relative grid h-7 w-7 place-items-center bg-gradient-to-br from-accent to-[#8aa8ff] text-[11px] font-semibold text-white shadow-[0_6px_16px_-8px_rgba(36,85,255,0.9)] transition-transform duration-500 group-hover:scale-105"
           >
             A
             <span className="absolute inset-0 bg-white/0 transition-colors duration-500 group-hover:bg-white/10" />
@@ -76,14 +76,14 @@ export function SiteHeader() {
           href="/book"
           event="book_call_clicked"
           properties={{ location: "navigation" }}
-          className="ml-8 hidden min-h-10 items-center bg-gradient-to-r from-accent to-[#4a72ff] px-4 text-sm font-medium text-white shadow-[0_8px_22px_-12px_rgba(36,85,255,0.95)] transition-[transform,box-shadow,filter] duration-500 hover:-translate-y-px hover:shadow-[0_14px_30px_-12px_rgba(36,85,255,1)] hover:brightness-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent md:inline-flex"
+          className="ml-8 hidden min-h-10 items-center bg-gradient-to-r from-accent to-[#6f92ff] px-4 text-sm font-medium text-white shadow-[0_8px_22px_-12px_rgba(36,85,255,0.95)] transition-[transform,box-shadow,filter] duration-500 hover:-translate-y-px hover:shadow-[0_14px_30px_-12px_rgba(36,85,255,1)] hover:brightness-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent md:inline-flex"
         >
           Book a call
         </TrackLink>
 
         <button
           type="button"
-          className="inline-flex min-h-11 min-w-11 items-center justify-center border border-line bg-canvas/60 transition-colors hover:border-strong md:hidden"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center border border-line bg-panel/60 transition-colors hover:border-strong md:hidden"
           aria-expanded={open}
           aria-controls="mobile-navigation"
           aria-label={open ? "Close navigation menu" : "Open navigation menu"}
@@ -94,7 +94,7 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <nav id="mobile-navigation" aria-label="Mobile navigation" className="border-t border-line bg-canvas md:hidden">
+        <nav id="mobile-navigation" aria-label="Mobile navigation" className="border-t border-line bg-canvas/95 backdrop-blur-xl md:hidden">
           <ul>
             {navigation.map((item) => (
               <li key={item.href} className="border-b border-line">
@@ -102,7 +102,7 @@ export function SiteHeader() {
               </li>
             ))}
             <li className="p-5">
-              <TrackLink href="/book" event="book_call_clicked" properties={{ location: "mobile_navigation" }} onClick={() => setOpen(false)} className="flex min-h-12 items-center justify-center bg-gradient-to-r from-accent to-[#4a72ff] px-5 font-medium text-white">
+              <TrackLink href="/book" event="book_call_clicked" properties={{ location: "mobile_navigation" }} onClick={() => setOpen(false)} className="flex min-h-12 items-center justify-center bg-gradient-to-r from-accent to-[#6f92ff] px-5 font-medium text-white">
                 Book a call
               </TrackLink>
             </li>

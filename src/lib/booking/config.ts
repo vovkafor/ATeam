@@ -45,8 +45,8 @@ export const TIMEZONE_OPTIONS = [
 ] as const;
 
 export const AGENDA = [
-  "Current QA process",
-  "Automation opportunities",
-  "Existing pain points",
-  "Potential next steps",
+  "How you test today",
+  "What keeps breaking",
+  "What is worth automating first",
+  "What it would take",
 ] as const;

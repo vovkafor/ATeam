@@ -9,10 +9,10 @@ describe("SiteHeader", () => {
   it("exposes all primary routes and the booking action", () => {
     render(<SiteHeader />);
     const navigation = screen.getByRole("navigation", { name: "Primary navigation" });
-    expect(navigation).toHaveTextContent("Services");
-    expect(navigation).toHaveTextContent("Work");
-    expect(navigation).toHaveTextContent("Process");
-    expect(navigation).toHaveTextContent("About");
+    expect(navigation).toHaveTextContent("What automation is");
+    expect(navigation).toHaveTextContent("What we do");
+    expect(navigation).toHaveTextContent("How we work");
+    expect(navigation).toHaveTextContent("Team");
     expect(screen.getByRole("link", { name: "Book a call" })).toHaveAttribute("href", "/book");
   });
 

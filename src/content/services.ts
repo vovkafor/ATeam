@@ -1,54 +1,32 @@
 import type { Service } from "@/types/content";
 
+/**
+ * Three things we do, said in words a founder can repeat to their team. The
+ * slugs match the clips in the bento section, so every entry has a visual.
+ */
 export const services: Service[] = [
   {
     slug: "web-ui-automation",
     number: "01",
-    title: "Web UI Automation",
-    shortDescription: "Reliable browser automation designed around real customer workflows.",
-    description: "We build maintainable regression systems that cover critical journeys across browsers without turning every UI detail into brittle test code.",
-    capabilities: ["Critical user-flow automation", "Cross-browser coverage", "Visual regression", "Flaky-test reduction", "Suite maintainability"],
-    technologies: ["Playwright", "Cypress", "Selenium", "TypeScript", "Python"],
-    outcome: "A browser suite your team can trust on every pull request.",
+    title: "Testing the app people click",
+    description:
+      "We turn the walkthrough your team does by hand — sign up, search, add to cart, pay — into a program that repeats it in every browser, on every change, and shows you the exact screen where it broke.",
+    technologies: ["Playwright", "Cypress", "Selenium", "TypeScript"],
   },
   {
     slug: "api-automation",
     number: "02",
-    title: "API Automation",
-    shortDescription: "Fast feedback at the service boundary, before defects reach the UI.",
-    description: "We validate REST and GraphQL behavior with focused integration, contract, and regression coverage mapped to product risk.",
-    capabilities: ["REST and GraphQL testing", "Integration coverage", "Contract validation", "Regression suites", "Test data strategy"],
-    technologies: ["REST", "GraphQL", "Postman", "Playwright", "Python"],
-    outcome: "Earlier defect detection with tests that run in minutes, not hours.",
+    title: "Testing what's behind the screen",
+    description:
+      "Under every button there is a request to a server. We check those directly, so a broken price, a lost order or a wrong total is caught in seconds — before anyone has to notice it in the interface.",
+    technologies: ["REST", "GraphQL", "Postman", "Python"],
   },
   {
     slug: "ci-cd-integration",
     number: "03",
-    title: "CI/CD Test Integration",
-    shortDescription: "Quality gates engineered into the path from pull request to production.",
-    description: "We make test execution observable, parallel, and useful to developers by integrating it directly with the delivery pipeline.",
-    capabilities: ["Pull-request validation", "Parallel execution", "Failure diagnostics", "Test reporting", "Release quality gates"],
-    technologies: ["GitHub Actions", "GitLab CI", "Jenkins", "Docker", "Allure"],
-    outcome: "Clear release signals without slowing the engineering team down.",
-  },
-  {
-    slug: "performance-testing",
-    number: "04",
-    title: "Performance Testing",
-    shortDescription: "Repeatable load signals tied to real system behavior and release risk.",
-    description: "We design load models, establish defensible baselines, and help teams isolate bottlenecks before production traffic does.",
-    capabilities: ["Load and stress testing", "Baseline monitoring", "Bottleneck analysis", "Capacity scenarios", "Performance budgets"],
-    technologies: ["k6", "JMeter", "Grafana", "Prometheus", "OpenTelemetry"],
-    outcome: "Measured capacity and actionable evidence for performance decisions.",
-  },
-  {
-    slug: "qa-architecture-audit",
-    number: "05",
-    title: "QA Architecture & Audit",
-    shortDescription: "A practical path from today’s test estate to reliable release confidence.",
-    description: "We assess coverage, tooling, suite health, feedback loops, and ownership—then turn findings into a prioritized engineering plan.",
-    capabilities: ["Suite evaluation", "Automation strategy", "Flaky-test analysis", "Test-pyramid review", "CI optimization"],
-    technologies: ["Architecture review", "Risk mapping", "Test analytics", "CI profiling"],
-    outcome: "A prioritized roadmap focused on the highest-value reliability work.",
+    title: "Running it all automatically",
+    description:
+      "The tests live next to your code and start themselves whenever a developer changes something. Everything runs in parallel, and the team gets one clear answer before the change reaches your customers: safe, or not.",
+    technologies: ["GitHub Actions", "GitLab CI", "Jenkins", "Docker"],
   },
 ];

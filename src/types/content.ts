@@ -2,39 +2,8 @@ export type Service = {
   slug: string;
   number: string;
   title: string;
-  shortDescription: string;
   description: string;
-  capabilities: string[];
   technologies: string[];
-  outcome: string;
-};
-
-export type ProjectMetric = {
-  value: string;
-  label: string;
-};
-
-export type Project = {
-  slug: string;
-  number: string;
-  title: string;
-  clientType: string;
-  summary: string;
-  challenge: string;
-  before: string;
-  approach: string[];
-  implementation: string[];
-  technologies: string[];
-  metrics: ProjectMetric[];
-  result: string;
-  lessons: string[];
-  isDemonstration: true;
-};
-
-/** A number worth leading with, shown in the expanded profile. */
-export type TeamHighlight = {
-  value: string;
-  label: string;
 };
 
 export type TeamRole = {
@@ -65,7 +34,6 @@ export type TeamMember = {
   technologies: string[];
   /** What this engineer is distinctly good at — not a duplicate of the tech list. */
   strengths: string[];
-  highlights: TeamHighlight[];
   experience: TeamRole[];
   education: TeamEducation[];
   image?: string;
@@ -78,9 +46,8 @@ export type ProcessStage = {
   title: string;
   shortTitle: string;
   description: string;
-  inputs: string;
+  /** What you actually get at the end of this step. */
   deliverable: string;
-  outcome: string;
 };
 
 export type FAQItem = {

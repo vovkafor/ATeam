@@ -17,11 +17,6 @@ export const team: TeamMember[] = [
       "Tests below the UI. Complex SQL queries and database performance analysis catch data-integrity defects the interface never shows.",
       "Owns the process, not just the tests — bug lifecycle in JIRA, cases in TestRail, reporting in Allure.",
     ],
-    highlights: [
-      { value: "0 → 70%", label: "Automated coverage in 4 months" },
-      { value: "−60%", label: "Manual regression cycle time" },
-      { value: "#1", label: "US App Store category rank" },
-    ],
     experience: [
       {
         role: "Senior QA Engineer",
@@ -66,11 +61,6 @@ export const team: TeamMember[] = [
       "Designs prompt architecture, so output consistency improves upstream instead of being patched in review.",
       "Works both sides of the discipline — exploratory and manual passes feed directly into the automated Playwright and PyTest coverage.",
       "Built an autonomous AI test agent that reads application context and generates executable flows without predefined scripts.",
-    ],
-    highlights: [
-      { value: "+30%", label: "Flagged-issue precision" },
-      { value: "4+ yrs", label: "Web, mobile and AI products" },
-      { value: "C1", label: "English — fluent, async-first" },
     ],
     experience: [
       {

@@ -35,9 +35,8 @@ describe("TeamCard", () => {
     expect(panel).toHaveClass("grid-rows-[0fr]");
   });
 
-  it("renders each engineer's own strengths, experience and highlights", () => {
+  it("renders each engineer's own strengths and experience", () => {
     const { unmount } = render(<TeamCard member={myron} />);
-    expect(screen.getByText(/0 → 70%/)).toBeInTheDocument();
     expect(screen.getByText(/Appium \+ Python \+ PyTest framework/i)).toBeInTheDocument();
     expect(screen.getByText(/Magento 1 → 2 migration/i)).toBeInTheDocument();
     unmount();

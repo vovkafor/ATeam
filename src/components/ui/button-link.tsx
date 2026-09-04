@@ -10,11 +10,11 @@ const base =
 
 const variants = {
   primary:
-    "border-accent bg-gradient-to-r from-accent to-[#4a72ff] text-white shadow-[0_10px_30px_-14px_rgba(36,85,255,0.95)] hover:-translate-y-0.5 hover:border-accent-hover hover:shadow-[0_18px_38px_-14px_rgba(36,85,255,1)]",
+    "border-accent bg-gradient-to-r from-accent to-[#6f92ff] text-white shadow-[0_14px_36px_-14px_rgba(76,125,255,0.85)] hover:-translate-y-0.5 hover:border-accent-hover hover:shadow-[0_22px_44px_-14px_rgba(76,125,255,1)]",
   secondary:
-    "border-strong bg-canvas/40 text-ink hover:-translate-y-0.5 hover:border-ink hover:bg-ink hover:text-white hover:shadow-[var(--shadow-raise)]",
+    "border-line bg-panel/60 text-ink hover:-translate-y-0.5 hover:border-accent hover:bg-accent/10 hover:text-accent hover:shadow-[var(--shadow-raise)]",
   inverse:
-    "border-white bg-white text-ink hover:-translate-y-0.5 hover:border-accent hover:bg-accent hover:text-white hover:shadow-[0_18px_38px_-14px_rgba(36,85,255,0.9)]",
+    "border-accent bg-accent text-white hover:-translate-y-0.5 hover:border-accent-hover hover:bg-accent-hover hover:shadow-[0_22px_44px_-14px_rgba(76,125,255,0.95)]",
   text: "border-transparent px-0 text-ink hover:text-accent",
 };
 

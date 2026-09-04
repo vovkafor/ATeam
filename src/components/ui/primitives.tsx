@@ -5,7 +5,8 @@ export function Container({ className = "", ...props }: ComponentProps<"div">) {
 }
 
 export function Section({ className = "", ...props }: ComponentProps<"section">) {
-  return <section className={`border-b border-line ${className}`} {...props} />;
+  /* scroll-mt keeps an anchored section clear of the sticky header. */
+  return <section className={`scroll-mt-20 border-b border-line ${className}`} {...props} />;
 }
 
 export function Eyebrow({ children, className = "" }: { children: ReactNode; className?: string }) {
@@ -49,7 +50,7 @@ export function SectionHeader({
 
 export function TechBadge({ children }: { children: ReactNode }) {
   return (
-    <span className="bg-[color-mix(in_oklab,var(--panel)_70%,white)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted transition-colors duration-500 hover:bg-accent/[0.07] hover:text-accent">
+    <span className="border border-line bg-panel px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted transition-colors duration-500 hover:bg-accent/[0.07] hover:text-accent">
       {children}
     </span>
   );

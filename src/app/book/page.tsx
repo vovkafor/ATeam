@@ -6,7 +6,7 @@ import { AGENDA, FILE_HINT, MEETING_DURATION_MINUTES } from "@/lib/booking/confi
 
 export const metadata: Metadata = {
   title: "Book a call",
-  description: "Book a 30-minute conversation about your testing infrastructure, automation opportunities, and next steps.",
+  description: "Book a 30-minute call about what your team checks by hand today and what a machine could check instead.",
   alternates: { canonical: "/book" },
 };
 
@@ -18,11 +18,11 @@ export default function BookPage() {
           <div className="border-b border-line p-5 md:p-10 lg:border-b-0 lg:border-r lg:p-14">
             <Eyebrow>BOOK / {MEETING_DURATION_MINUTES} MINUTES</Eyebrow>
             <h1 className="mt-14 text-hero font-medium leading-[0.98] tracking-[-0.055em]">
-              Let&apos;s talk about your testing infrastructure.
+              Tell us what your team checks by hand.
             </h1>
             <p className="mt-8 max-w-xl text-lg leading-8 text-muted">
-              Book a focused conversation about where release confidence breaks down and where automation can create
-              the strongest signal.
+              Thirty minutes, no pitch. You walk us through the product and how you release it; we tell you what is
+              worth automating first — and what isn&apos;t.
             </p>
 
             <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-y border-line py-5 text-sm text-muted">
@@ -49,8 +49,8 @@ export default function BookPage() {
                 <Paperclip aria-hidden="true" size={13} className="text-accent" /> Bring context
               </p>
               <p className="mt-3 text-sm leading-6 text-muted">
-                Attach requirements, an architecture diagram or a recent test report and we&apos;ll review it before
-                the call. {FILE_HINT}.
+                Attach anything that helps — a requirements doc, a screenshot, a list of what keeps breaking — and
+                we&apos;ll read it before the call. {FILE_HINT}.
               </p>
             </div>
           </div>

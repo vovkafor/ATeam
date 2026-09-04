@@ -53,10 +53,10 @@ export function VisualDiffClip() {
         className="scan-sweep absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-transparent via-accent/[0.08] to-transparent"
       />
       <svg viewBox="0 0 240 128" className="absolute inset-0 h-full w-full p-5" role="img" aria-label="Visual diff: three regions drift out of alignment between the design and the rendered DOM, are flagged, then resolve.">
-        <Wireframe label="FIGMA" drifted={false} />
+        <Wireframe label="DESIGN" drifted={false} />
         <line x1="120" y1="4" x2="120" y2="124" stroke="var(--line)" strokeWidth="1" />
         <g transform="translate(128 0)">
-          <Wireframe label="DOM" drifted />
+          <Wireframe label="THE REAL PAGE" drifted />
         </g>
       </svg>
 

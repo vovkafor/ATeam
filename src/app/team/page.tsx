@@ -36,7 +36,7 @@ export default function TeamPage() {
           <SectionHeader
             eyebrow="PROFILES / 02"
             title="Hover a card for the full picture."
-            description="Each profile opens to the record behind the summary — measured outcomes, the roles they came from, and what that engineer is distinctly good at."
+            description="Each profile opens to the record behind the summary: the roles they came from, and what that engineer is distinctly good at."
           />
           <div className="grid items-start gap-5 border-t border-line p-5 md:gap-6 md:p-8 lg:grid-cols-2 lg:p-10">
             {team.map((member, index) => (

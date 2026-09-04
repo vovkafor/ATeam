@@ -234,7 +234,7 @@ function BookingPlanner() {
                 aria-label="Previous month"
                 disabled={!canGoBack}
                 onClick={() => changeMonth(-1)}
-                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors duration-500 hover:border-ink hover:bg-ink hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:bg-transparent disabled:hover:text-ink"
+                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors duration-500 hover:border-accent hover:bg-accent hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-line disabled:hover:bg-transparent disabled:hover:text-ink"
               >
                 <ChevronLeft aria-hidden="true" size={17} />
               </button>
@@ -242,7 +242,7 @@ function BookingPlanner() {
                 type="button"
                 aria-label="Next month"
                 onClick={() => changeMonth(1)}
-                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors duration-500 hover:border-ink hover:bg-ink hover:text-white"
+                className="inline-flex h-11 w-11 items-center justify-center border border-line transition-colors duration-500 hover:border-accent hover:bg-accent hover:text-white"
               >
                 <ChevronRight aria-hidden="true" size={17} />
               </button>
@@ -267,7 +267,7 @@ function BookingPlanner() {
                   aria-selected={selected}
                   disabled={!available || pending}
                   onClick={() => setSelectedDate(date)}
-                  className={`aspect-square min-h-10 border text-sm transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${selected ? "border-accent bg-accent font-medium text-white" : "border-transparent hover:border-ink hover:bg-panel"} disabled:cursor-not-allowed disabled:text-strong disabled:hover:border-transparent disabled:hover:bg-transparent`}
+                  className={`aspect-square min-h-10 border text-sm transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${selected ? "border-accent bg-accent font-medium text-white" : "border-transparent hover:border-accent hover:bg-panel"} disabled:cursor-not-allowed disabled:text-strong disabled:hover:border-transparent disabled:hover:bg-transparent`}
                 >
                   {date.getDate()}
                 </button>
@@ -285,7 +285,7 @@ function BookingPlanner() {
                   aria-pressed={selectedTime === entry.slot}
                   disabled={entry.past || pending}
                   onClick={() => setSelectedTime(entry.slot)}
-                  className={`min-h-11 border px-3 font-mono text-[11px] transition-colors duration-300 ${selectedTime === entry.slot ? "border-ink bg-ink text-white" : "border-line bg-transparent text-muted hover:border-ink hover:text-ink"} disabled:cursor-not-allowed disabled:border-line disabled:opacity-40 disabled:text-strong disabled:hover:text-strong`}
+                  className={`min-h-11 border px-3 font-mono text-[11px] transition-colors duration-300 ${selectedTime === entry.slot ? "border-accent bg-accent text-white" : "border-line bg-transparent text-muted hover:border-accent hover:text-ink"} disabled:cursor-not-allowed disabled:border-line disabled:opacity-40 disabled:text-strong disabled:hover:text-strong`}
                 >
                   {entry.label}
                   {entry.dayShift !== 0 ? (
@@ -349,7 +349,7 @@ export function BookingCalendar({ provider = "calcom" }: BookingCalendarProps) {
   if (!calLink) return <BookingPlanner />;
 
   return (
-    <div className="relative min-h-[720px] overflow-hidden border border-line bg-white" data-testid="booking-calendar">
+    <div className="relative min-h-[720px] overflow-hidden lit border border-line bg-panel/70" data-testid="booking-calendar">
       <div className="absolute inset-x-0 top-0 h-1 animate-pulse bg-accent" aria-hidden="true" />
       <Cal
         calLink={calLink}

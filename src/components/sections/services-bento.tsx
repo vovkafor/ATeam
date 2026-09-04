@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, type CSSProperties, type ReactNode } from "react";
-import { TrackLink } from "@/components/analytics/track-link";
 import { useSpotlight } from "@/components/motion/spotlight";
 import { ApiConsoleClip, ParallelWorkersClip, VisualDiffClip } from "@/components/visuals/service-clips";
 import { services } from "@/content/services";
 import type { Service } from "@/types/content";
 
-/** Only the three services with a bespoke clip get one; the rest read editorially. */
 const clips: Record<string, ReactNode> = {
   "web-ui-automation": <VisualDiffClip />,
   "api-automation": <ApiConsoleClip />,
@@ -16,23 +14,17 @@ const clips: Record<string, ReactNode> = {
 
 function Chip({ children }: { children: ReactNode }) {
   return (
-    <span className="bg-[color-mix(in_oklab,var(--panel)_70%,white)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">
+    <span className="border border-line bg-panel px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">
       {children}
     </span>
   );
 }
 
 function Preview({ service }: { service: Service }) {
-  const clip = clips[service.slug];
-
   return (
     <div key={service.slug} className="fade-up-delayed flex h-full flex-col">
-      <div className="cine relative aspect-[16/9] max-h-[380px] overflow-hidden bg-[color-mix(in_oklab,var(--panel)_55%,white)]">
-        {clip ?? (
-          <p className="absolute inset-0 flex items-center p-8 text-[clamp(1.1rem,1.6vw,1.5rem)] font-medium leading-snug tracking-[-0.02em] md:p-10">
-            {service.outcome}
-          </p>
-        )}
+      <div className="cine relative aspect-[16/9] max-h-[380px] overflow-hidden border border-line bg-panel">
+        {clips[service.slug]}
       </div>
 
       <div className="mt-8">
@@ -44,30 +36,16 @@ function Preview({ service }: { service: Service }) {
             <Chip key={technology}>{technology}</Chip>
           ))}
         </div>
-
-        <TrackLink
-          href={`/services#${service.slug}`}
-          event="service_opened"
-          properties={{ service: service.slug }}
-          className="group/link mt-8 inline-flex items-center gap-2 text-[15px] font-medium text-accent transition-colors duration-500 hover:text-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-        >
-          Explore service
-          <span
-            aria-hidden="true"
-            className="transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/link:translate-x-1"
-          >
-            →
-          </span>
-        </TrackLink>
       </div>
     </div>
   );
 }
 
 /**
- * Bento layout for the service list: one service is in focus with its clip and
- * full copy, the other four stay as a quiet index. Pointing at — or tabbing to
- * — any row brings it into focus, so the whole set is reachable without a click.
+ * One service in focus with its clip and copy, the others as a quiet index.
+ * Pointing at — or tabbing to — any row brings it into focus. The rows are
+ * buttons rather than links: there is no separate services page to go to any
+ * more, the whole thing lives here.
  */
 export function ServicesBento() {
   const [activeSlug, setActiveSlug] = useState(services[0].slug);
@@ -92,15 +70,14 @@ export function ServicesBento() {
 
           return (
             <li key={service.slug}>
-              <TrackLink
-                href={`/services#${service.slug}`}
-                event="service_opened"
-                properties={{ service: service.slug }}
+              <button
+                type="button"
                 onMouseEnter={() => setActiveSlug(service.slug)}
                 onFocus={() => setActiveSlug(service.slug)}
+                onClick={() => setActiveSlug(service.slug)}
                 aria-current={isActive ? "true" : undefined}
                 style={{ "--reveal-delay": `${index * 70}ms` } as CSSProperties}
-                className="group/row flex items-baseline gap-4 border-b border-line py-5 transition-colors duration-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                className="group/row flex w-full items-baseline gap-4 border-b border-line py-5 text-left transition-colors duration-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
               >
                 <span
                   className={`font-mono text-[10px] tabular-nums tracking-[0.14em] transition-colors duration-500 ${
@@ -116,7 +93,7 @@ export function ServicesBento() {
                 >
                   {service.title}
                 </span>
-              </TrackLink>
+              </button>
             </li>
           );
         })}

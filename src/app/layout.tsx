@@ -18,7 +18,7 @@ function metadataBase() {
 export const metadata: Metadata = {
   metadataBase: metadataBase(),
   title: {
-    default: `${siteConfig.name} — Testing infrastructure built to ship`,
+    default: `${siteConfig.name} — We make your product test itself`,
     template: `%s — ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -26,13 +26,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: siteConfig.name,
-    title: `${siteConfig.name} — Testing infrastructure built to ship`,
+    title: `${siteConfig.name} — We make your product test itself`,
     description: siteConfig.description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: `${siteConfig.name}: Testing infrastructure built to ship.` }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: `${siteConfig.name}: we make your product test itself.` }],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} — Testing infrastructure built to ship`,
+    title: `${siteConfig.name} — We make your product test itself`,
     description: siteConfig.description,
     images: ["/og.png"],
   },

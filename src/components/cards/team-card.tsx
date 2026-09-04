@@ -34,7 +34,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
  */
 function Portrait({ member }: { member: TeamMember }) {
   return (
-    <div className="group/portrait relative aspect-[3/4] w-full shrink-0 overflow-hidden bg-[color-mix(in_oklab,var(--panel)_60%,white)] sm:w-40 lg:w-48">
+    <div className="group/portrait relative aspect-[3/4] w-full shrink-0 overflow-hidden bg-panel sm:w-40 lg:w-48">
       {member.image ? (
         <Image
           src={member.image}
@@ -62,7 +62,7 @@ function Portrait({ member }: { member: TeamMember }) {
           {member.initials}
         </span>
 
-        <span className="absolute inset-x-7 bottom-7 flex items-center gap-1.5 bg-white/85 px-2 py-1 font-mono text-[8px] uppercase leading-[1.35] tracking-[0.08em] text-accent backdrop-blur-sm">
+        <span className="absolute inset-x-7 bottom-7 flex items-center gap-1.5 bg-canvas/85 px-2 py-1 font-mono text-[8px] uppercase leading-[1.35] tracking-[0.08em] text-accent backdrop-blur-sm">
           <span className="hud-pulse h-1 w-1 shrink-0 rounded-full bg-clip-ok" />
           {member.status}
         </span>
@@ -97,7 +97,7 @@ export function TeamCard({ member, index = 0 }: { member: TeamMember; index?: nu
       onMouseLeave={() => setHovered(false)}
       data-reveal
       style={{ "--reveal-delay": `${index * 110}ms` } as CSSProperties}
-      className="spotlight-host group relative self-start overflow-hidden bg-[color-mix(in_oklab,var(--panel)_38%,white)] transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-[0_28px_70px_-40px_rgba(10,10,12,0.3)]"
+      className="spotlight-host group relative self-start overflow-hidden border border-line bg-panel/70 transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-[0_28px_70px_-38px_rgba(0,0,0,0.95)]"
     >
       <span className="spotlight" aria-hidden="true" />
 
@@ -143,19 +143,6 @@ export function TeamCard({ member, index = 0 }: { member: TeamMember; index?: nu
       >
         <div className="overflow-hidden">
           <div className={`transition-opacity duration-500 ${expanded ? "opacity-100 delay-100" : "opacity-0"}`}>
-            <dl className="grid gap-6 px-6 pb-8 sm:grid-cols-3 md:px-8">
-              {member.highlights.map((highlight) => (
-                <div key={highlight.label}>
-                  <dd className="text-[clamp(1.3rem,2vw,1.7rem)] font-medium leading-none tracking-[-0.05em] text-accent">
-                    {highlight.value}
-                  </dd>
-                  <dt className="mt-3 font-mono text-[10px] uppercase leading-4 tracking-[0.1em] text-muted">
-                    {highlight.label}
-                  </dt>
-                </div>
-              ))}
-            </dl>
-
             <div className="px-6 pb-8 md:px-8">
               <SectionLabel>What {member.name.split(" ")[0]} brings</SectionLabel>
               <ul className="mt-5 space-y-3.5">

@@ -61,7 +61,7 @@ export function BookingSuccess({
       <div className="flex items-start gap-4 border-b border-line pb-6">
         <span
           aria-hidden="true"
-          className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center bg-gradient-to-br from-accent to-[#4a72ff] text-white shadow-[0_10px_24px_-12px_rgba(36,85,255,0.9)]"
+          className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center bg-gradient-to-br from-accent to-[#6f92ff] text-white shadow-[0_10px_24px_-12px_rgba(36,85,255,0.9)]"
         >
           <Check size={18} strokeWidth={2.5} />
         </span>
@@ -127,7 +127,7 @@ export function BookingSuccess({
           href={calendarLink}
           target="_blank"
           rel="noreferrer"
-          className="group/btn relative inline-flex min-h-12 flex-1 items-center justify-center gap-2 overflow-hidden border border-accent bg-gradient-to-r from-accent to-[#4a72ff] px-5 font-medium text-white shadow-[0_10px_30px_-14px_rgba(36,85,255,0.95)] transition-[transform,box-shadow] duration-500 hover:-translate-y-0.5 hover:shadow-[0_18px_38px_-14px_rgba(36,85,255,1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+          className="group/btn relative inline-flex min-h-12 flex-1 items-center justify-center gap-2 overflow-hidden border border-accent bg-gradient-to-r from-accent to-[#6f92ff] px-5 font-medium text-white shadow-[0_10px_30px_-14px_rgba(36,85,255,0.95)] transition-[transform,box-shadow] duration-500 hover:-translate-y-0.5 hover:shadow-[0_18px_38px_-14px_rgba(36,85,255,1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
         >
           <span
             aria-hidden="true"
@@ -139,7 +139,7 @@ export function BookingSuccess({
         <button
           type="button"
           onClick={onReset}
-          className="inline-flex min-h-12 items-center justify-center border border-strong px-5 font-medium transition-colors duration-500 hover:border-ink hover:bg-ink hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+          className="inline-flex min-h-12 items-center justify-center border border-strong px-5 font-medium transition-colors duration-500 hover:border-accent hover:bg-accent hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
         >
           Book another slot
         </button>

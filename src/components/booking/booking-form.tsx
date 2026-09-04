@@ -111,13 +111,13 @@ export function BookingForm({
       </div>
 
       <div className="mt-5">
-        <label className={labelClass} htmlFor="booking-challenge">What should we help you automate?</label>
+        <label className={labelClass} htmlFor="booking-challenge">What does your team check by hand today?</label>
         <textarea
           id="booking-challenge"
           name="challenge"
           required
           rows={4}
-          placeholder="Regression QA, API coverage, release confidence…"
+          placeholder="Sign-up, checkout, the admin panel before every release…"
           disabled={pending}
           aria-invalid={Boolean(errors.challenge)}
           aria-describedby={errors.challenge ? "booking-challenge-error" : undefined}
@@ -131,7 +131,7 @@ export function BookingForm({
       <button
         type="submit"
         disabled={pending}
-        className="group/btn relative mt-8 inline-flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden bg-ink px-5 font-medium text-white transition-[background-color,opacity] duration-500 hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:opacity-50"
+        className="group/btn relative mt-8 inline-flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden bg-accent px-5 font-medium text-white transition-[background-color,opacity] duration-500 hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:opacity-50"
       >
         {pending ? null : (
           <span

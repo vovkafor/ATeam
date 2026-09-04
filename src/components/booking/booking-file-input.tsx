@@ -92,7 +92,7 @@ export function BookingFileInput({ disabled, serverError }: { disabled?: boolean
       />
 
       {file ? (
-        <div className="mt-2 flex items-center gap-3 border border-line bg-white p-3">
+        <div className="mt-2 flex items-center gap-3 border border-line bg-panel p-3">
           <Paperclip aria-hidden="true" size={15} className="shrink-0 text-accent" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium">{file.name}</p>
@@ -103,7 +103,7 @@ export function BookingFileInput({ disabled, serverError }: { disabled?: boolean
             onClick={clear}
             disabled={disabled}
             aria-label={`Remove ${file.name}`}
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center border border-line transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white disabled:opacity-40"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center border border-line transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-white disabled:opacity-40"
           >
             <X aria-hidden="true" size={15} />
           </button>
@@ -118,7 +118,7 @@ export function BookingFileInput({ disabled, serverError }: { disabled?: boolean
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
           className={`mt-2 flex min-h-20 cursor-pointer flex-col items-center justify-center gap-1.5 border border-dashed px-4 py-5 text-center transition-colors duration-300 ${
-            dragging ? "border-accent bg-accent/[0.06]" : "border-strong bg-white hover:border-accent hover:bg-accent/[0.03]"
+            dragging ? "border-accent bg-accent/[0.06]" : "border-strong bg-panel/60 hover:border-accent hover:bg-accent/[0.03]"
           } ${disabled ? "pointer-events-none opacity-50" : ""}`}
         >
           <span className="flex items-center gap-2 text-sm font-medium">

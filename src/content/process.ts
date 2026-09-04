@@ -1,10 +1,41 @@
 import type { ProcessStage } from "@/types/content";
 
+/**
+ * Four steps, in the words a client would use. Anything that sounded like a
+ * methodology diagram has been cut — the point is that the work is legible to
+ * someone who has never bought testing before.
+ */
 export const processStages: ProcessStage[] = [
-  { number: "01", title: "Discovery & Audit", shortTitle: "Audit", description: "We inspect product risk, release flow, test assets, environments, and failure history.", inputs: "Architecture, release cadence, current suites, known pain points", deliverable: "System map and prioritized findings", outcome: "A shared view of the reliability constraints" },
-  { number: "02", title: "Testing Strategy", shortTitle: "Strategy", description: "We decide what deserves coverage, at which layer, and how often it should run.", inputs: "Risk map, customer journeys, service boundaries", deliverable: "Coverage model and execution tiers", outcome: "A strategy linked to release decisions" },
-  { number: "03", title: "Architecture", shortTitle: "Architecture", description: "We define frameworks, fixtures, test data, environments, and reporting boundaries.", inputs: "Stack constraints, CI capacity, team ownership", deliverable: "Technical design and implementation plan", outcome: "A maintainable foundation before suite growth" },
-  { number: "04", title: "Implementation", shortTitle: "Implementation", description: "We build representative vertical slices before scaling repeatable patterns.", inputs: "Access, stable environments, prioritized scenarios", deliverable: "Working suites, fixtures, and documentation", outcome: "Useful coverage that the team can extend" },
-  { number: "05", title: "CI/CD Integration", shortTitle: "CI/CD Integration", description: "We connect test layers to the right delivery events with useful diagnostics.", inputs: "Pipeline definitions, branch policy, runtime targets", deliverable: "Quality gates, reports, and failure routing", outcome: "Fast evidence inside the engineering workflow" },
-  { number: "06", title: "Monitoring & Improvement", shortTitle: "Continuous Improvement", description: "We track signal quality, runtime, flakiness, and escaped risk as the product changes.", inputs: "Execution data, incidents, release outcomes", deliverable: "Health review and improvement backlog", outcome: "A system that stays reliable instead of decaying" },
+  {
+    number: "01",
+    title: "We look at what you have",
+    shortTitle: "Look",
+    description:
+      "A short call and a look at the product: what breaks most often, what your team checks by hand before every release, and how much of the day that eats.",
+    deliverable: "A written list of what hurts, in order of what it costs you.",
+  },
+  {
+    number: "02",
+    title: "We agree what to automate first",
+    shortTitle: "Agree",
+    description:
+      "Not everything is worth automating. We pick the handful of journeys where a failure actually costs money — usually sign-up, search, checkout and payment — and start there.",
+    deliverable: "A short plan: what gets covered first, and why that order.",
+  },
+  {
+    number: "03",
+    title: "We write the tests",
+    shortTitle: "Build",
+    description:
+      "The manual walkthrough becomes a program. You see the first working tests within the first weeks, not at the end — and they live in your repository, not ours.",
+    deliverable: "Working tests you own, with a README your developers can follow.",
+  },
+  {
+    number: "04",
+    title: "They run by themselves",
+    shortTitle: "Run",
+    description:
+      "The suite starts itself on every change and reports back in plain language: what passed, what broke, and on which step. We keep it healthy as the product changes.",
+    deliverable: "A green or red answer before every release, without anyone clicking.",
+  },
 ];
