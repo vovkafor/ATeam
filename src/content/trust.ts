@@ -35,9 +35,9 @@ export const trustSignals: TrustSignal[] = [
 ];
 
 export const collaboration = {
-  title: "Two engineers, one release signal.",
+  title: "One team, one release signal.",
   intro:
-    "A-Team is deliberately small. You work directly with the two people writing the tests — no account layer, no handover to juniors, no rotating bench.",
+    "A-Team is deliberately small and hires slowly. You work directly with the engineers writing your tests — no account layer, no handover to juniors, no rotating bench.",
   points: [
     {
       title: "Split by layer, not by ticket",

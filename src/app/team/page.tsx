@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import { TeamCard } from "@/components/cards/team-card";
+import { ClientWall } from "@/components/sections/client-wall";
 import { CTASection } from "@/components/sections/cta-section";
 import { TrustSignals } from "@/components/sections/trust-signals";
 import { Container, PageHero, SectionHeader } from "@/components/ui/primitives";
@@ -27,7 +28,7 @@ export default function TeamPage() {
               on the work.
             </>
           }
-          description="Two senior QA engineers with complementary ground: automation frameworks built from zero, and evaluation of AI-driven systems. You work with both of us, directly."
+          description="Senior QA engineers with complementary ground: automation frameworks built from zero, and evaluation of AI-driven systems. The team is growing — you always work with the engineers directly."
         />
 
         <TrustSignals />
@@ -43,6 +44,15 @@ export default function TeamPage() {
               <TeamCard key={member.slug} member={member} index={index} />
             ))}
           </div>
+        </section>
+
+        <section className="border-b border-line" aria-label="Where the team has worked">
+          <SectionHeader
+            eyebrow="TRACK RECORD"
+            title="Where we&apos;ve worked."
+            description="Point at a company to see the skills that engagement used."
+          />
+          <ClientWall />
         </section>
 
         <section className="border-b border-line" aria-label="How we work together">

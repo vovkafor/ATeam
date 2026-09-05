@@ -942,3 +942,98 @@ html[data-reveal-ready] [data-reveal][data-revealed] {
   .auto-tick { opacity: 1; transform: none; }
   .auto-sweep { transform: scaleX(1); }
 }
+
+/* ═════════════════════════════════════════════════ the client wall ══
+   Six companies, each card holding two states: the mark at rest, and the
+   skills that engagement used. `data-open` is set by hover, focus and tap
+   alike, so touch gets the same reveal a pointer does. */
+.wall-rest,
+.wall-detail {
+  transition:
+    opacity 500ms var(--ease-out-expo),
+    transform 700ms var(--ease-out-expo);
+}
+
+.wall-detail {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+.wall-card[data-open] .wall-rest { opacity: 0; transform: scale(0.97); }
+.wall-card[data-open] .wall-detail { opacity: 1; transform: none; }
+
+/* Corner brackets and the scan pass borrow the portrait HUD's language, so an
+   inspected card reads the same way an inspected engineer does. */
+.wall-brackets,
+.wall-scan {
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.wall-card[data-open] .wall-brackets { opacity: 1; }
+
+.wall-card[data-open] .wall-scan {
+  opacity: 1;
+  animation: wall-scan 900ms cubic-bezier(0.4, 0, 0.2, 1) 1;
+}
+
+@keyframes wall-scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(280%); }
+}
+
+/* Chips arrive one after another — the "analysis" finishing, not a block of
+   text appearing. */
+.wall-chip { opacity: 0; transform: translateY(6px); }
+
+.wall-card[data-open] .wall-chip {
+  animation: wall-chip 520ms var(--ease-out-expo) forwards;
+  animation-delay: calc(var(--chip-index, 0) * 55ms + 180ms);
+}
+
+@keyframes wall-chip {
+  to { opacity: 1; transform: none; }
+}
+
+/* Everything else steps back while one card is being read. */
+.wall:has(.wall-card[data-open]) .wall-card:not([data-open]) {
+  opacity: 0.55;
+}
+
+/* A quiet glow in the corner of every card, lifted on the open one — so the
+   wall never reads as six empty rectangles. */
+.wall-glow {
+  opacity: 0.5;
+  transition: opacity 600ms var(--ease-out-expo);
+}
+
+.wall-card[data-open] .wall-glow { opacity: 1; }
+
+/* Marks sit quiet and colourless until the card is being read, then come back
+   to their own colour — the wall reads as one system, not nine brand palettes. */
+.wall-logo {
+  opacity: 0.72;
+  filter: grayscale(1) brightness(1.25);
+  transition: opacity 500ms var(--ease-out-expo), filter 500ms var(--ease-out-expo);
+}
+
+.wall-card[data-open] .wall-logo {
+  opacity: 1;
+  filter: none;
+}
+
+.wall .wall-card {
+  transition:
+    opacity 500ms var(--ease-out-expo),
+    filter 500ms var(--ease-out-expo),
+    transform 700ms var(--ease-out-expo),
+    box-shadow 700ms var(--ease-out-expo),
+    border-color 700ms var(--ease-out-expo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall-card[data-open] .wall-scan { animation: none; }
+  .wall-card[data-open] .wall-chip { animation: none; opacity: 1; transform: none; }
+  .wall-rest, .wall-detail, .wall .wall-card, .wall-glow { transition-duration: 1ms; }
+}

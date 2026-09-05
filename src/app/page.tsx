@@ -3,6 +3,7 @@ import { TrackLink } from "@/components/analytics/track-link";
 import { TeamCard } from "@/components/cards/team-card";
 import { TextRise } from "@/components/motion/text-rise";
 import { CTASection } from "@/components/sections/cta-section";
+import { ClientWall } from "@/components/sections/client-wall";
 import { ServicesBento } from "@/components/sections/services-bento";
 import { TrustSignals } from "@/components/sections/trust-signals";
 import { ButtonLink } from "@/components/ui/button-link";
@@ -27,7 +28,7 @@ export default function Home() {
             className="fade-up-delayed mt-10 max-w-xl text-lg leading-8 text-muted md:text-xl"
             style={{ "--rise-delay": "520ms" } as CSSProperties}
           >
-            Two engineers who take the checks your team does by hand before every release — and turn them into
+            A small QA team that takes the checks your product needs before every release — and turns them into
             something a machine does in minutes, on every change.
           </p>
 
@@ -69,6 +70,18 @@ export default function Home() {
         </Section>
       </Container>
 
+      {/* Proof before the pitch: who we have done this for, and with what. */}
+      <Container>
+        <Section id="clients">
+          <SectionHeader
+            eyebrow="WHERE WE'VE WORKED"
+            title="Products people actually use."
+            description="Point at a company to see the skills that engagement used — the tools, the layer, the part that was hard."
+          />
+          <ClientWall />
+        </Section>
+      </Container>
+
       <Container>
         <Section id="services">
           <SectionHeader
@@ -99,8 +112,8 @@ export default function Home() {
         <Section id="team">
           <SectionHeader
             eyebrow="WHO YOU WORK WITH"
-            title="Two engineers. No middle layer."
-            description="You talk to the people writing the tests — not to an account manager who forwards it."
+            title="The people doing the work."
+            description="Two senior engineers on the team today, and growing. You talk to whoever writes your tests — never to an account manager who forwards it."
           />
           <div className="grid items-start gap-5 border-t border-line p-5 md:gap-6 md:p-8 lg:grid-cols-2 lg:p-10">
             {team.map((member, index) => (

@@ -54,3 +54,15 @@ export type FAQItem = {
   question: string;
   answer: string;
 };
+
+/** A company the team has worked with, shown on the client wall. */
+export type ClientEngagement = {
+  slug: string;
+  name: string;
+  /** Keyed logo in /public/logos. Real dimensions, or the browser derives the
+   *  wrong aspect ratio from the width/height attributes and squashes it. */
+  logo?: { src: string; width: number; height: number };
+  product: string;
+  work: string;
+  skills: string[];
+};
